@@ -46,6 +46,7 @@ namespace DeliveryApi.Controllers
                 usuario.DtCadastro = DateTime.Now;
                 usuario.DtAtualizacao = DateTime.Now;
                 usuario.Situacao = 'A';
+                usuario.Senha = SenhaService.Criptografar(usuario.Senha);
 
                 var id = usuarioRepository.Create(usuario);
 
@@ -256,6 +257,63 @@ namespace DeliveryApi.Controllers
                     Descricao = ex.Message,
                     DescricaoCompleta = ex.ToString(),
                     RegistroCorrenteId = empresaId,
+                    DtCadastro = DateTime.Now,
+                    DtAtualizacao = DateTime.Now,
+                    Situacao = 'A'
+                };
+
+                ErroService.NotifyError(erro, domain);
+
+                response.ok = false;
+                response.msg = errmsg;
+                return response;
+            }
+        }
+
+        [Route("/api/[controller]/EditPassword")]
+        [HttpPost]
+        public Response EditPassword(EditPassword editPassword)
+        {
+            try
+            {
+                var usuario = usuarioRepository.Get(editPassword.UsuarioId);
+
+                if(usuario.Senha != editPassword.SenhaAtual)
+                {
+                    response.ok = false;
+                    response.msg = "Senha Atual incorreta.";
+
+                    return response;
+                }
+
+                usuario.Senha = SenhaService.Criptografar(editPassword.NovaSenha);
+                usuario.DtAtualizacao = DateTime.Now;
+
+                var result = usuarioRepository.Update(usuario);
+
+                if (!result)
+                {
+                    response.ok = false;
+                    response.msg = errmsg;
+
+                }
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                string domain = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}";
+
+                ErroModel erro = new ErroModel
+                {
+                    StatusCode = (int)HttpStatusCode.InternalServerError,
+                    NomeAplicacao = "DeliveryApi",
+                    NomeFuncao = "EditPassword",
+                    Url = domain + "/api/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName,
+                    ParametroEntrada = Newtonsoft.Json.JsonConvert.SerializeObject(editPassword),
+                    Descricao = ex.Message,
+                    DescricaoCompleta = ex.ToString(),
+                    RegistroCorrenteId = editPassword.UsuarioId,
                     DtCadastro = DateTime.Now,
                     DtAtualizacao = DateTime.Now,
                     Situacao = 'A'

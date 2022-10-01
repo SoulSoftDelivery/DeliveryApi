@@ -90,6 +90,10 @@ namespace DeliveryApi
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "DeliveryApi v1"));
             }
 
+            app.UseCors(c =>
+                c.AllowAnyMethod()
+                .AllowAnyHeader().AllowAnyOrigin());
+
             app.UseHttpsRedirection();
 
             app.UseRouting();

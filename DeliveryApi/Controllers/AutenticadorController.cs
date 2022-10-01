@@ -51,6 +51,8 @@ namespace DeliveryApi.Controllers
                     return response;
                 }
 
+                login.Senha = SenhaService.Criptografar(login.Senha);
+
                 if (login.Senha != usuario.Senha)
                 {
                     response.ok = false;
@@ -61,6 +63,8 @@ namespace DeliveryApi.Controllers
 
                 var token = TokenService.GenerateToken(usuario, _config["Jwt:Key"]);
                 var refreshToken = TokenService.GenerateRefreshToken();
+
+                TokenService.DeleteRefreshToken(login.Email);
                 TokenService.SaveRefreshToken(login.Email, refreshToken);
 
                 var responseLogin = new ResponseLogin
@@ -115,11 +119,11 @@ namespace DeliveryApi.Controllers
                 var usuarioEmail = principal.Identity.Name;
                 var savedRefreshToken = TokenService.GetRefreshToken(usuarioEmail);
                 if (savedRefreshToken != loginWithToken.RefreshToken)
-                    throw new SecurityTokenException("Invalid refresh token");
+                    throw new SecurityTokenException("Refresh Token Invalido");
 
                 var newJwtToken = TokenService.GenerateToken(principal.Claims, _config["Jwt:Key"]);
                 var newRefreshToken = TokenService.GenerateRefreshToken();
-                TokenService.DeleteRefreshToken(usuarioEmail, loginWithToken.RefreshToken);
+                TokenService.DeleteRefreshToken(usuarioEmail);
                 TokenService.SaveRefreshToken(usuarioEmail, newRefreshToken);
 
                 var usuario = usuarioRepository.ConsultaPorEmail(usuarioEmail);

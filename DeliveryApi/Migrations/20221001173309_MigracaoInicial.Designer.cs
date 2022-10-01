@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DeliveryApi.Migrations
 {
     [DbContext(typeof(WebAppDbContext))]
-    [Migration("20220907153535_MigracaoInicial")]
+    [Migration("20221001173309_MigracaoInicial")]
     partial class MigracaoInicial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -654,8 +654,7 @@ namespace DeliveryApi.Migrations
                         .HasColumnName("nome");
 
                     b.Property<string>("Senha")
-                        .HasMaxLength(22)
-                        .HasColumnType("nvarchar(22)")
+                        .HasColumnType("nvarchar(max)")
                         .HasColumnName("senha");
 
                     b.Property<string>("Situacao")
@@ -761,7 +760,7 @@ namespace DeliveryApi.Migrations
             modelBuilder.Entity("DeliveryApi.Models.PedidoProdutoModel", b =>
                 {
                     b.HasOne("DeliveryApi.Models.PedidoModel", "Pedido")
-                        .WithMany()
+                        .WithMany("PedidoProdutos")
                         .HasForeignKey("PedidoId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -821,6 +820,11 @@ namespace DeliveryApi.Migrations
                     b.Navigation("Empresa");
 
                     b.Navigation("TipoUsuario");
+                });
+
+            modelBuilder.Entity("DeliveryApi.Models.PedidoModel", b =>
+                {
+                    b.Navigation("PedidoProdutos");
                 });
 #pragma warning restore 612, 618
         }
