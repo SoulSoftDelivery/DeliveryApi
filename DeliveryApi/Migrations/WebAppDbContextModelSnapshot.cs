@@ -652,8 +652,7 @@ namespace DeliveryApi.Migrations
                         .HasColumnName("nome");
 
                     b.Property<string>("Senha")
-                        .HasMaxLength(22)
-                        .HasColumnType("nvarchar(22)")
+                        .HasColumnType("nvarchar(max)")
                         .HasColumnName("senha");
 
                     b.Property<string>("Situacao")
@@ -759,7 +758,7 @@ namespace DeliveryApi.Migrations
             modelBuilder.Entity("DeliveryApi.Models.PedidoProdutoModel", b =>
                 {
                     b.HasOne("DeliveryApi.Models.PedidoModel", "Pedido")
-                        .WithMany()
+                        .WithMany("PedidoProdutos")
                         .HasForeignKey("PedidoId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -819,6 +818,11 @@ namespace DeliveryApi.Migrations
                     b.Navigation("Empresa");
 
                     b.Navigation("TipoUsuario");
+                });
+
+            modelBuilder.Entity("DeliveryApi.Models.PedidoModel", b =>
+                {
+                    b.Navigation("PedidoProdutos");
                 });
 #pragma warning restore 612, 618
         }

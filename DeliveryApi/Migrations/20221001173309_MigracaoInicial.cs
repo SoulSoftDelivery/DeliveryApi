@@ -259,7 +259,7 @@ namespace DeliveryApi.Migrations
                     telefone = table.Column<string>(type: "nvarchar(16)", maxLength: 16, nullable: false),
                     email = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     dt_ultimo_acesso = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    senha = table.Column<string>(type: "nvarchar(22)", maxLength: 22, nullable: true),
+                    senha = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     empresa_id = table.Column<int>(type: "int", nullable: false),
                     tipo_usuario_id = table.Column<int>(type: "int", nullable: false),
                     dt_cadastro = table.Column<DateTime>(type: "datetime2", nullable: false),

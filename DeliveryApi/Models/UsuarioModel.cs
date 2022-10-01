@@ -21,7 +21,6 @@ namespace DeliveryApi.Models
         [Column("dt_ultimo_acesso")]
         public DateTime DtUltimoAcesso { get; set; }
         [Column("senha")]
-        [StringLength(22)]
         public string Senha { get; set; }
         [Column("empresa_id")]
         [ForeignKey("Empresa")]

@@ -22,7 +22,7 @@ namespace DeliveryApi.Services
                 {
                     new Claim(ClaimTypes.Name, usuario.Email),
                 }),
-                Expires = DateTime.UtcNow.AddHours(2),
+                Expires = DateTime.UtcNow.AddHours(8),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),
                     SecurityAlgorithms.HmacSha256Signature)
             };
@@ -37,7 +37,7 @@ namespace DeliveryApi.Services
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.UtcNow.AddHours(2),
+                Expires = DateTime.UtcNow.AddHours(8),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),
                     SecurityAlgorithms.HmacSha256Signature)
             };
@@ -86,10 +86,20 @@ namespace DeliveryApi.Services
             return _refreshTokens.FirstOrDefault(x => x.Item1 == usuarioEmail).Item2;
         }
 
-        public static void DeleteRefreshToken(string usuarioEmail, string refreshToken)
+        //public static void DeleteRefreshToken(string usuarioEmail, string refreshToken)
+        //{
+        //    var item = _refreshTokens.FirstOrDefault(x => x.Item1 == usuarioEmail && x.Item2 == refreshToken);
+        //    _refreshTokens.Remove(item);
+        //}
+
+        public static void DeleteRefreshToken(string usuarioEmail)
         {
-            var item = _refreshTokens.FirstOrDefault(x => x.Item1 == usuarioEmail && x.Item2 == refreshToken);
-            _refreshTokens.Remove(item);
+            var itens = _refreshTokens.Where(x => x.Item1 == usuarioEmail).ToList();
+
+            foreach (var item in itens)
+            {
+                _refreshTokens.Remove(item);
+            }
         }
     }
 }
