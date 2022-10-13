@@ -46,7 +46,7 @@ namespace DeliveryApi.Controllers
                 usuario.DtCadastro = DateTime.Now;
                 usuario.DtAtualizacao = DateTime.Now;
                 usuario.Situacao = 'A';
-                usuario.Senha = SenhaService.Criptografar(usuario.Senha);
+                usuario.Senha = SecurityService.Criptografar(usuario.Senha);
 
                 var id = usuarioRepository.Create(usuario);
 
@@ -278,7 +278,9 @@ namespace DeliveryApi.Controllers
             {
                 var usuario = usuarioRepository.Get(editPassword.UsuarioId);
 
-                if(usuario.Senha != editPassword.SenhaAtual)
+                editPassword.SenhaAtual = SecurityService.Criptografar(editPassword.SenhaAtual);
+
+                if (usuario.Senha != editPassword.SenhaAtual)
                 {
                     response.ok = false;
                     response.msg = "Senha Atual incorreta.";
@@ -286,7 +288,7 @@ namespace DeliveryApi.Controllers
                     return response;
                 }
 
-                usuario.Senha = SenhaService.Criptografar(editPassword.NovaSenha);
+                usuario.Senha = SecurityService.Criptografar(editPassword.NovaSenha);
                 usuario.DtAtualizacao = DateTime.Now;
 
                 var result = usuarioRepository.Update(usuario);

@@ -7,6 +7,7 @@ using DeliveryApi.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Extensions.Configuration;
+using System.Web;
 
 namespace DeliveryApi.Controllers
 {
@@ -51,7 +52,7 @@ namespace DeliveryApi.Controllers
                     return response;
                 }
 
-                login.Senha = SenhaService.Criptografar(login.Senha);
+                login.Senha = SecurityService.Criptografar(login.Senha);
 
                 if (login.Senha != usuario.Senha)
                 {
@@ -69,6 +70,7 @@ namespace DeliveryApi.Controllers
 
                 var responseLogin = new ResponseLogin
                 {
+                    UsuarioId = usuario.Id,
                     Nome = usuario.Nome,
                     Email = usuario.Email,
                     Telefone = usuario.Telefone,
@@ -130,6 +132,7 @@ namespace DeliveryApi.Controllers
 
                 var responseLogin = new ResponseLogin
                 {
+                    UsuarioId = usuario.Id,
                     Nome = usuario.Nome,
                     Email = usuario.Email,
                     Telefone = usuario.Telefone,
@@ -167,7 +170,175 @@ namespace DeliveryApi.Controllers
                 response.msg = errmsg;
                 return response;
             }
+        }
 
+        [AllowAnonymous]
+        [HttpGet]
+        [Route("/api/[controller]/EnviarLinkRedefinicaoSenha/{email}")]
+        public Response EnviarLinkRedefinicaoSenha(string email)
+        {
+            try
+            {
+                var usuario = usuarioRepository.ConsultaPorEmail(email);
+
+                if (usuario == null)
+                {
+                    response.ok = false;
+                    response.msg = "Email não encontrado.";
+
+                    return response;
+                }
+
+                string emailCifrado = SecurityService.Cifrar(usuario.Email);
+                emailCifrado = HttpUtility.UrlEncode(emailCifrado);
+                emailCifrado = emailCifrado.Replace('-', '+').Replace('_', '/');
+
+                var url = "https://soulsoft.com.br/reset-password";
+
+                string hostName = (this.Request.Host).ToString();
+
+                if (hostName.Contains("localhost"))
+                {
+                    url = "http://localhost:3000/reset-password";
+                }
+
+                var link = $"{url}?ref={emailCifrado}&email={usuario.Email}&id={usuario.Id}";
+
+                string texto = $"Olá {System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(usuario.Nome)}, <br><br> Acesse o seguinte <a href=\"{link}\">link</a> para redefinir sua senha. Ou copie o link abaixo e cole no seu navegador: <br><br>{link} <br> <br>Atenciosamente,<br><br> Segurança SoulSoft <br>soulsoft.com.br";
+                EmailService.EnviarEmail("SoulSoft - Redefinição de Senha", usuario.Nome, usuario.Email, texto);
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                string domain = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}";
+
+                ErroModel erro = new ErroModel
+                {
+                    StatusCode = (int)HttpStatusCode.InternalServerError,
+                    NomeAplicacao = "DeliveryApi",
+                    NomeFuncao = "LoginWithToken",
+                    Url = domain + "/api/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName,
+                    ParametroEntrada = Newtonsoft.Json.JsonConvert.SerializeObject(email),
+                    Descricao = ex.Message,
+                    DescricaoCompleta = ex.ToString(),
+                    DtCadastro = DateTime.Now,
+                    DtAtualizacao = DateTime.Now,
+                    Situacao = 'A'
+                };
+
+                ErroService.NotifyError(erro, domain);
+
+                response.ok = false;
+                response.msg = errmsg;
+                return response;
+            }
+        }
+
+        [AllowAnonymous]
+        [HttpPost("ChecarResetSenha")]
+        [Route("/api/[controller]/ChecarResetSenha")]
+        public Response ChecarResetSenha([FromBody] RedefinirSenha redefinirSenha)
+        {
+            try
+            {
+                var usuario = usuarioRepository.Get(redefinirSenha.Id);
+
+                if (usuario == null)
+                {
+                    response.ok = false;
+                    response.msg = "Usuário não encontrado.";
+                }
+
+
+                bool resultado = SecurityService.Decifrar2(redefinirSenha.Token, redefinirSenha.Email);
+
+                if (!(usuario.Email == redefinirSenha.Email && resultado == true && usuario.Id == redefinirSenha.Id))
+                {
+                    response.ok = false;
+                    response.msg = "Ocorreu erro no link de reset enviado por email. Por solicite outro reset novamente";
+
+                    return response;
+                }
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                string domain = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}";
+
+                ErroModel erro = new ErroModel
+                {
+                    StatusCode = (int)HttpStatusCode.InternalServerError,
+                    NomeAplicacao = "DeliveryApi",
+                    NomeFuncao = "LoginWithToken",
+                    Url = domain + "/api/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName,
+                    ParametroEntrada = Newtonsoft.Json.JsonConvert.SerializeObject(redefinirSenha),
+                    RegistroCorrenteId = redefinirSenha.Id,
+                    Descricao = ex.Message,
+                    DescricaoCompleta = ex.ToString(),
+                    DtCadastro = DateTime.Now,
+                    DtAtualizacao = DateTime.Now,
+                    Situacao = 'A'
+                };
+
+                ErroService.NotifyError(erro, domain);
+
+                response.ok = false;
+                response.msg = errmsg;
+                return response;
+            }
+        }
+
+        [AllowAnonymous]
+        [HttpPost("ResetarSenha")]
+        [Route("/api/[controller]/ResetarSenha")]
+        public Response ResetarSenha([FromBody] RedefinirSenha redefinirSenha)
+        {
+            try
+            {
+                var usuario = usuarioRepository.Get(redefinirSenha.Id);
+
+                if (usuario == null)
+                {
+                    response.ok = false;
+                    response.msg = "Usuário não encontrado.";
+
+                    return response;
+                }
+
+                usuario.Senha = SecurityService.Criptografar(redefinirSenha.NovaSenha);
+                usuario.DtAtualizacao = DateTime.Now;
+
+                usuarioRepository.Update(usuario);
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                string domain = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}";
+
+                ErroModel erro = new ErroModel
+                {
+                    StatusCode = (int)HttpStatusCode.InternalServerError,
+                    NomeAplicacao = "DeliveryApi",
+                    NomeFuncao = "LoginWithToken",
+                    Url = domain + "/api/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName,
+                    ParametroEntrada = Newtonsoft.Json.JsonConvert.SerializeObject(redefinirSenha),
+                    RegistroCorrenteId = redefinirSenha.Id,
+                    Descricao = ex.Message,
+                    DescricaoCompleta = ex.ToString(),
+                    DtCadastro = DateTime.Now,
+                    DtAtualizacao = DateTime.Now,
+                    Situacao = 'A'
+                };
+
+                ErroService.NotifyError(erro, domain);
+
+                response.ok = false;
+                response.msg = errmsg;
+                return response;
+            }
         }
     }
 }
