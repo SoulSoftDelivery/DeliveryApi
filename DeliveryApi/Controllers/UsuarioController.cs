@@ -5,6 +5,7 @@ using System;
 using System.Net;
 using DeliveryApi.Services;
 using Microsoft.AspNetCore.Authorization;
+using System.Linq;
 
 namespace DeliveryApi.Controllers
 {
@@ -229,11 +230,13 @@ namespace DeliveryApi.Controllers
 
         [Route("/api/[controller]/List")]
         [HttpGet]
-        public Response List(int empresaId)
+        public Response List(int empresaId, int page, int pageSize)
         {
             try
             {
-                var usuarios = usuarioRepository.List(empresaId);
+                var usuarios = usuarioRepository.List(empresaId)
+                    .OrderByDescending(x => x.DtCadastro)
+                    .ToList();
 
                 if (usuarios == null)
                 {
@@ -241,7 +244,23 @@ namespace DeliveryApi.Controllers
                     response.msg = errmsg;
                 }
 
-                response.conteudo.Add(usuarios);
+                PaginationResponse paginationResponse = new PaginationResponse();
+
+                var totalRows = usuarios.Count;
+
+                paginationResponse.TotalRows = totalRows;
+
+                //Arredontando o total de páginas para cima
+                decimal x = (decimal)totalRows;
+                decimal y = (decimal)pageSize;
+
+                decimal totalPages = (x / y);
+                paginationResponse.TotalPages = (int)Math.Ceiling(totalPages);
+
+                //Capturando os registros da páginação atual
+                paginationResponse.Results.Add(usuarios.Skip((page - 1) * pageSize).Take(pageSize).ToList());
+
+                response.conteudo.Add(paginationResponse);
                 return response;
             }
             catch (Exception ex)

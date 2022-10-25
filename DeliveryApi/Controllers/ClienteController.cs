@@ -5,6 +5,7 @@ using System;
 using System.Net;
 using DeliveryApi.Services;
 using Microsoft.AspNetCore.Authorization;
+using System.Linq;
 
 namespace DeliveryApi.Controllers
 {
@@ -218,19 +219,51 @@ namespace DeliveryApi.Controllers
 
         [Route("/api/[controller]/List")]
         [HttpGet]
-        public Response List(int empresaId)
+        public Response List(int empresaId, string searchText, int page, int pageSize)
         {
             try
             {
-                var clientes = clienteRepository.List(empresaId);
+                var clientes = clienteRepository.List(empresaId)
+                    .OrderByDescending(x => x.DtCadastro)
+                    .ToList();
 
                 if (clientes == null)
                 {
                     response.ok = false;
                     response.msg = errmsg;
+
+                    return response;
                 }
 
-                response.conteudo.Add(clientes);
+                //Filtro da pesquisa
+                if (!string.IsNullOrEmpty(searchText))
+                {
+                    clientes = clientes.Where(x =>
+                        (!string.IsNullOrEmpty(x.Nome) && x.Nome.Contains(searchText)) ||
+                        (!string.IsNullOrEmpty(x.Telefone) && x.Telefone.Contains(searchText)) ||
+                        (!string.IsNullOrEmpty(x.Email) && x.Email.Contains(searchText))
+                    )
+                    .OrderByDescending(x => x.DtCadastro)
+                    .ToList();
+                }
+
+                PaginationResponse paginationResponse = new PaginationResponse();
+
+                var totalRows = clientes.Count;
+
+                paginationResponse.TotalRows = totalRows;
+
+                //Arredontando o total de páginas para cima
+                decimal x = (decimal)totalRows;
+                decimal y = (decimal)pageSize;
+
+                decimal totalPages = (x / y);
+                paginationResponse.TotalPages = (int)Math.Ceiling(totalPages);
+
+                //Capturando os registros da páginação atual
+                paginationResponse.Results.Add(clientes.Skip(page * pageSize).Take(pageSize).ToList());
+
+                response.conteudo.Add(paginationResponse);
                 return response;
             }
             catch (Exception ex)

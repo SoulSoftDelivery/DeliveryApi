@@ -36,8 +36,8 @@ namespace DeliveryApi.Controllers
         }
 
         [AllowAnonymous]
-        [Route("/api/[controller]/Login")]
         [HttpPost]
+        [Route("/api/[controller]/Login")]
         public Response Login([FromBody] Login login)
         {
             try
@@ -236,7 +236,7 @@ namespace DeliveryApi.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPost("ChecarResetSenha")]
+        [HttpPost]
         [Route("/api/[controller]/ChecarResetSenha")]
         public Response ChecarResetSenha([FromBody] RedefinirSenha redefinirSenha)
         {
@@ -291,7 +291,7 @@ namespace DeliveryApi.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPost("ResetarSenha")]
+        [HttpPost]
         [Route("/api/[controller]/ResetarSenha")]
         public Response ResetarSenha([FromBody] RedefinirSenha redefinirSenha)
         {
