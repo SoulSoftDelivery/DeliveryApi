@@ -14,6 +14,7 @@ namespace DeliveryApi.Controllers
     public class ClienteController : Controller
     {
         IClienteRepository clienteRepository;
+        IEnderecoRepository enderecoRepository;
 
         Response response = new Response
         {
@@ -23,24 +24,32 @@ namespace DeliveryApi.Controllers
 
         const string errmsg = "Não foi possível concluir a solicitação.";
 
-        public ClienteController(IClienteRepository ClienteRepository)
+        public ClienteController(IClienteRepository ClienteRepository, IEnderecoRepository EnderecoRepository)
         {
             clienteRepository = ClienteRepository;
+            enderecoRepository = EnderecoRepository;
         }
 
         [Route("/api/[controller]/Create")]
         [HttpPost]
-        public Response Create(ClienteModel cliente)
+        public Response Create(ClienteEndereco clienteEndereco)
         {
             try
             {
-                cliente.DtCadastro = DateTime.Now;
-                cliente.DtAtualizacao = DateTime.Now;
-                cliente.Situacao = 'A';
+                //Cadastro de Cliente
+                ClienteModel newCliente = new ClienteModel
+                {
+                    Nome = clienteEndereco.Nome,
+                    Telefone = clienteEndereco.Telefone,
+                    Email = clienteEndereco.Email,
+                    DtCadastro = DateTime.Now,
+                    DtAtualizacao = DateTime.Now,
+                    Situacao = 'A'
+                };
 
-                var id = clienteRepository.Create(cliente);
+                var clienteId = clienteRepository.Create(newCliente);
 
-                if (id == 0)
+                if (clienteId == 0)
                 {
                     response.ok = false;
                     response.msg = errmsg;
@@ -48,7 +57,34 @@ namespace DeliveryApi.Controllers
                     return response;
                 }
 
-                response.conteudo.Add(id);
+                //Cadastro de Endereco
+                EnderecoModel newEndereco = new EnderecoModel
+                {
+                    Bairro = clienteEndereco.Bairro,
+                    Rua = clienteEndereco.Rua,
+                    Cep = clienteEndereco.Cep,
+                    Cidade = clienteEndereco.Cidade,
+                    Quadra = clienteEndereco.Quadra,
+                    Lote = clienteEndereco.Lote,
+                    Numero = clienteEndereco.Numero,
+                    Complemento = clienteEndereco.Complemento,
+                    ClienteId = clienteId,
+                    DtCadastro = DateTime.Now,
+                    DtAtualizacao = DateTime.Now,
+                    Situacao = 'A'
+                };
+
+                var enderecoId = enderecoRepository.Create(newEndereco);
+
+                if (enderecoId == 0)
+                {
+                    response.ok = false;
+                    response.msg = "Erro no cadastro de endereço";
+
+                    return response;
+                }
+
+                response.conteudo.Add(clienteId);
 
                 return response;
             }
@@ -62,7 +98,7 @@ namespace DeliveryApi.Controllers
                     NomeAplicacao = "DeliveryApi",
                     NomeFuncao = "Create",
                     Url = domain + "/api/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName,
-                    ParametroEntrada = Newtonsoft.Json.JsonConvert.SerializeObject(cliente),
+                    ParametroEntrada = Newtonsoft.Json.JsonConvert.SerializeObject(clienteEndereco),
                     Descricao = ex.Message,
                     DescricaoCompleta = ex.ToString(),
                     DtCadastro = DateTime.Now,
@@ -180,6 +216,26 @@ namespace DeliveryApi.Controllers
             try
             {
                 var cliente = clienteRepository.Get(clienteId);
+                var endereco = enderecoRepository.EnderecoByClienteId(clienteId);
+
+                ClienteEndereco clienteEndereco = new ClienteEndereco
+                {
+                    ClienteId = clienteId,
+                    EnderecoId = endereco.Id,
+                    EmpresaId = cliente.EmpresaId,
+                    Nome = cliente.Nome,
+                    Telefone = cliente.Telefone,
+                    Email = cliente.Email,
+                    //Sexo = cliente.Sexo,
+                    Bairro = endereco.Bairro,
+                    Rua = endereco.Rua,
+                    Quadra = endereco.Quadra,
+                    Lote = endereco.Lote,
+                    Numero = endereco.Numero,
+                    Complemento = endereco.Complemento,
+                    Cep = endereco.Cep,
+                    Cidade = endereco.Cidade
+                };
 
                 if (cliente == null)
                 {
@@ -187,7 +243,7 @@ namespace DeliveryApi.Controllers
                     response.msg = errmsg;
                 }
 
-                response.conteudo.Add(cliente);
+                response.conteudo.Add(clienteEndereco);
                 return response;
             }
             catch (Exception ex)

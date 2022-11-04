@@ -8,5 +8,6 @@ namespace DeliveryApi.Repositories.Interface
         bool Update(EnderecoModel Endereco);
         bool Delete(EnderecoModel Endereco);
         EnderecoModel Get(int EnderecoId);
+        EnderecoModel EnderecoByClienteId(int ClienteId);
     }
 }

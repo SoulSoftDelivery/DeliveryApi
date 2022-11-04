@@ -64,5 +64,17 @@ namespace DeliveryApi.Repositories.Repository
 
             return null;
         }
+
+
+        public EnderecoModel EnderecoByClienteId(int clienteId)
+        {
+            if (_context != null)
+            {
+                var endereco = _context.enderecos.FirstOrDefault(x => x.ClienteId == clienteId);
+                return endereco;
+            }
+
+            return null;
+        }
     }
 }
