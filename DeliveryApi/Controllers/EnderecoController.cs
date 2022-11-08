@@ -35,7 +35,7 @@ namespace DeliveryApi.Controllers
             {
                 endereco.DtCadastro = DateTime.Now;
                 endereco.DtAtualizacao = DateTime.Now;
-                endereco.Situacao = 'A';
+                endereco.Ativo = true;
 
                 var id = enderecoRepository.Create(endereco);
 
@@ -66,7 +66,7 @@ namespace DeliveryApi.Controllers
                     DescricaoCompleta = ex.ToString(),
                     DtCadastro = DateTime.Now,
                     DtAtualizacao = DateTime.Now,
-                    Situacao = 'A'
+                    Ativo = true
                 };
 
                 ErroService.NotifyError(erro, domain);
@@ -93,7 +93,6 @@ namespace DeliveryApi.Controllers
                 newEndereco.Numero = endereco.Numero;
                 newEndereco.Cep = endereco.Cep;
                 newEndereco.Complemento = endereco.Complemento;
-                newEndereco.Situacao = endereco.Situacao;
                 newEndereco.DtAtualizacao = DateTime.Now;
 
                 if (endereco.ClienteId > 0)
@@ -127,7 +126,7 @@ namespace DeliveryApi.Controllers
                     RegistroCorrenteId = endereco.Id,
                     DtCadastro = DateTime.Now,
                     DtAtualizacao = DateTime.Now,
-                    Situacao = 'A'
+                    Ativo = true
                 };
 
                 ErroService.NotifyError(erro, domain);
@@ -171,7 +170,7 @@ namespace DeliveryApi.Controllers
                     RegistroCorrenteId = enderecoId,
                     DtCadastro = DateTime.Now,
                     DtAtualizacao = DateTime.Now,
-                    Situacao = 'A'
+                    Ativo = true
                 };
 
                 ErroService.NotifyError(erro, domain);
@@ -215,7 +214,7 @@ namespace DeliveryApi.Controllers
                     RegistroCorrenteId = enderecoId,
                     DtCadastro = DateTime.Now,
                     DtAtualizacao = DateTime.Now,
-                    Situacao = 'A'
+                    Ativo = true
                 };
 
                 ErroService.NotifyError(erro, domain);

@@ -12,7 +12,7 @@ namespace DeliveryApi.Models
         public string Cidade { get; set; }
         [Column("cep")]
         [StringLength(10)]
-        [Required]
+        //[Required]
         public string Cep { get; set; }
         [Column("bairro")]
         [StringLength(100)]

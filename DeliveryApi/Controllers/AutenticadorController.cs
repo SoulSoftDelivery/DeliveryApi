@@ -99,7 +99,7 @@ namespace DeliveryApi.Controllers
                     DescricaoCompleta = ex.ToString(),
                     DtCadastro = DateTime.Now,
                     DtAtualizacao = DateTime.Now,
-                    Situacao = 'A'
+                    Ativo = true
                 };
 
                 ErroService.NotifyError(erro, domain);
@@ -161,7 +161,7 @@ namespace DeliveryApi.Controllers
                     DescricaoCompleta = ex.ToString(),
                     DtCadastro = DateTime.Now,
                     DtAtualizacao = DateTime.Now,
-                    Situacao = 'A'
+                    Ativo = true
                 };
 
                 ErroService.NotifyError(erro, domain);
@@ -224,7 +224,7 @@ namespace DeliveryApi.Controllers
                     DescricaoCompleta = ex.ToString(),
                     DtCadastro = DateTime.Now,
                     DtAtualizacao = DateTime.Now,
-                    Situacao = 'A'
+                    Ativo = true
                 };
 
                 ErroService.NotifyError(erro, domain);
@@ -279,7 +279,7 @@ namespace DeliveryApi.Controllers
                     DescricaoCompleta = ex.ToString(),
                     DtCadastro = DateTime.Now,
                     DtAtualizacao = DateTime.Now,
-                    Situacao = 'A'
+                    Ativo = true
                 };
 
                 ErroService.NotifyError(erro, domain);
@@ -330,7 +330,7 @@ namespace DeliveryApi.Controllers
                     DescricaoCompleta = ex.ToString(),
                     DtCadastro = DateTime.Now,
                     DtAtualizacao = DateTime.Now,
-                    Situacao = 'A'
+                    Ativo = true
                 };
 
                 ErroService.NotifyError(erro, domain);

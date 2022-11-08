@@ -6,9 +6,9 @@ namespace DeliveryApi.Models
 {
     public class TipoPedidoModel : BaseEntity
     {
-        [Column("descricao")]
+        [Column("nome")]
         [StringLength(100)]
         [Required]
-        public string Descricao { get; set; }
+        public string Nome { get; set; }
     }
 }

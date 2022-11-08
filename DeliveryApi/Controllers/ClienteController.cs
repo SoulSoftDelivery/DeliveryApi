@@ -42,9 +42,10 @@ namespace DeliveryApi.Controllers
                     Nome = clienteEndereco.Nome,
                     Telefone = clienteEndereco.Telefone,
                     Email = clienteEndereco.Email,
+                    Sexo = clienteEndereco.Sexo,
                     DtCadastro = DateTime.Now,
                     DtAtualizacao = DateTime.Now,
-                    Situacao = 'A'
+                    Ativo = true
                 };
 
                 var clienteId = clienteRepository.Create(newCliente);
@@ -71,7 +72,7 @@ namespace DeliveryApi.Controllers
                     ClienteId = clienteId,
                     DtCadastro = DateTime.Now,
                     DtAtualizacao = DateTime.Now,
-                    Situacao = 'A'
+                    Ativo = true
                 };
 
                 var enderecoId = enderecoRepository.Create(newEndereco);
@@ -103,7 +104,7 @@ namespace DeliveryApi.Controllers
                     DescricaoCompleta = ex.ToString(),
                     DtCadastro = DateTime.Now,
                     DtAtualizacao = DateTime.Now,
-                    Situacao = 'A'
+                    Ativo = true
                 };
 
                 ErroService.NotifyError(erro, domain);
@@ -116,25 +117,43 @@ namespace DeliveryApi.Controllers
 
         [Route("/api/[controller]/Update")]
         [HttpPatch]
-        public Response Update(ClienteModel cliente)
+        public Response Update(ClienteEndereco clienteEndereco)
         {
             try
             {
-                var newcliente = clienteRepository.Get(cliente.Id);
+                //Alteração de cliente
+                var newCliente = clienteRepository.Get(clienteEndereco.ClienteId);
 
-                newcliente.Nome = cliente.Nome;
-                newcliente.Telefone = cliente.Telefone;
-                newcliente.Email = cliente.Email;
-                newcliente.Situacao = cliente.Situacao;
-                newcliente.DtAtualizacao = DateTime.Now;
+                newCliente.Nome = clienteEndereco.Nome;
+                newCliente.Telefone = clienteEndereco.Telefone;
+                newCliente.Email = clienteEndereco.Email;
+                newCliente.Sexo = clienteEndereco.Sexo;
+                newCliente.Ativo = clienteEndereco.Ativo;
+                newCliente.DtAtualizacao = DateTime.Now;
 
-                var result = clienteRepository.Update(newcliente);
+                var result = clienteRepository.Update(newCliente);
 
                 if (!result)
                 {
                     response.ok = false;
                     response.msg = errmsg;
+
+                    return response;
                 }
+
+                var newEndereco = enderecoRepository.Get(clienteEndereco.EnderecoId);
+
+                newEndereco.Cidade = clienteEndereco.Cidade;
+                newEndereco.Cep = clienteEndereco.Cep;
+                newEndereco.Rua = clienteEndereco.Rua;
+                newEndereco.Quadra = clienteEndereco.Quadra;
+                newEndereco.Bairro = clienteEndereco.Bairro;
+                newEndereco.Numero = clienteEndereco.Numero;
+                newEndereco.Lote = clienteEndereco.Lote;
+                newEndereco.Complemento = clienteEndereco.Complemento;
+                newEndereco.Ativo = clienteEndereco.Ativo;
+
+                enderecoRepository.Update(newEndereco);
 
                 return response;
             }
@@ -148,13 +167,13 @@ namespace DeliveryApi.Controllers
                     NomeAplicacao = "DeliveryApi",
                     NomeFuncao = "Update",
                     Url = domain + "/api/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName,
-                    ParametroEntrada = Newtonsoft.Json.JsonConvert.SerializeObject(cliente),
+                    ParametroEntrada = Newtonsoft.Json.JsonConvert.SerializeObject(clienteEndereco),
                     Descricao = ex.Message,
                     DescricaoCompleta = ex.ToString(),
-                    RegistroCorrenteId = cliente.Id,
+                    RegistroCorrenteId = clienteEndereco.ClienteId,
                     DtCadastro = DateTime.Now,
                     DtAtualizacao = DateTime.Now,
-                    Situacao = 'A'
+                    Ativo = true
                 };
 
                 ErroService.NotifyError(erro, domain);
@@ -171,6 +190,7 @@ namespace DeliveryApi.Controllers
         {
             try
             {
+                //Deletando o Cliente
                 var cliente = clienteRepository.Get(clienteId);
                 var result = clienteRepository.Delete(cliente);
 
@@ -178,7 +198,13 @@ namespace DeliveryApi.Controllers
                 {
                     response.ok = false;
                     response.msg = errmsg;
+
+                    return response;
                 }
+
+                //Deletando o Endereço do Cliente
+                var endereco = enderecoRepository.EnderecoByClienteId(clienteId);
+                enderecoRepository.Delete(endereco);
 
                 return response;
             }
@@ -198,7 +224,7 @@ namespace DeliveryApi.Controllers
                     RegistroCorrenteId = clienteId,
                     DtCadastro = DateTime.Now,
                     DtAtualizacao = DateTime.Now,
-                    Situacao = 'A'
+                    Ativo = true
                 };
 
                 ErroService.NotifyError(erro, domain);
@@ -216,31 +242,39 @@ namespace DeliveryApi.Controllers
             try
             {
                 var cliente = clienteRepository.Get(clienteId);
-                var endereco = enderecoRepository.EnderecoByClienteId(clienteId);
 
                 ClienteEndereco clienteEndereco = new ClienteEndereco
                 {
                     ClienteId = clienteId,
-                    EnderecoId = endereco.Id,
                     EmpresaId = cliente.EmpresaId,
                     Nome = cliente.Nome,
                     Telefone = cliente.Telefone,
                     Email = cliente.Email,
-                    //Sexo = cliente.Sexo,
-                    Bairro = endereco.Bairro,
-                    Rua = endereco.Rua,
-                    Quadra = endereco.Quadra,
-                    Lote = endereco.Lote,
-                    Numero = endereco.Numero,
-                    Complemento = endereco.Complemento,
-                    Cep = endereco.Cep,
-                    Cidade = endereco.Cidade
+                    Sexo = cliente.Sexo,
+                    Ativo = cliente.Ativo
                 };
+
+                var endereco = enderecoRepository.EnderecoByClienteId(clienteId);
+
+                if (endereco != null)
+                {
+                    clienteEndereco.EnderecoId = endereco.Id;
+                    clienteEndereco.Bairro = endereco.Bairro;
+                    clienteEndereco.Rua = endereco.Rua;
+                    clienteEndereco.Quadra = endereco.Quadra;
+                    clienteEndereco.Lote = endereco.Lote;
+                    clienteEndereco.Numero = endereco.Numero;
+                    clienteEndereco.Complemento = endereco.Complemento;
+                    clienteEndereco.Cep = endereco.Cep;
+                    clienteEndereco.Cidade = endereco.Cidade;
+                }
 
                 if (cliente == null)
                 {
                     response.ok = false;
                     response.msg = errmsg;
+
+                    return response;
                 }
 
                 response.conteudo.Add(clienteEndereco);
@@ -262,7 +296,7 @@ namespace DeliveryApi.Controllers
                     RegistroCorrenteId = clienteId,
                     DtCadastro = DateTime.Now,
                     DtAtualizacao = DateTime.Now,
-                    Situacao = 'A'
+                    Ativo = true
                 };
 
                 ErroService.NotifyError(erro, domain);
@@ -337,7 +371,7 @@ namespace DeliveryApi.Controllers
                     RegistroCorrenteId = empresaId,
                     DtCadastro = DateTime.Now,
                     DtAtualizacao = DateTime.Now,
-                    Situacao = 'A'
+                    Ativo = true
                 };
 
                 ErroService.NotifyError(erro, domain);

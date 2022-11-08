@@ -13,10 +13,10 @@ namespace DeliveryApi.Migrations
                 {
                     id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    descricao = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    nome = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     dt_cadastro = table.Column<DateTime>(type: "datetime2", nullable: false),
                     dt_atualizacao = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    situacao = table.Column<string>(type: "nvarchar(1)", nullable: false)
+                    ativo = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -39,7 +39,7 @@ namespace DeliveryApi.Migrations
                     registro_corrente_id = table.Column<int>(type: "int", nullable: false),
                     dt_cadastro = table.Column<DateTime>(type: "datetime2", nullable: false),
                     dt_atualizacao = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    situacao = table.Column<string>(type: "nvarchar(1)", nullable: false)
+                    ativo = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -52,10 +52,10 @@ namespace DeliveryApi.Migrations
                 {
                     id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    descricao = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    nome = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     dt_cadastro = table.Column<DateTime>(type: "datetime2", nullable: false),
                     dt_atualizacao = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    situacao = table.Column<string>(type: "nvarchar(1)", nullable: false)
+                    ativo = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -68,10 +68,10 @@ namespace DeliveryApi.Migrations
                 {
                     id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    descricao = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    nome = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     dt_cadastro = table.Column<DateTime>(type: "datetime2", nullable: false),
                     dt_atualizacao = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    situacao = table.Column<string>(type: "nvarchar(1)", nullable: false)
+                    ativo = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -84,10 +84,10 @@ namespace DeliveryApi.Migrations
                 {
                     id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    descricao = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    nome = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     dt_cadastro = table.Column<DateTime>(type: "datetime2", nullable: false),
                     dt_atualizacao = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    situacao = table.Column<string>(type: "nvarchar(1)", nullable: false)
+                    ativo = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -100,10 +100,10 @@ namespace DeliveryApi.Migrations
                 {
                     id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    descricao = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    nome = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     dt_cadastro = table.Column<DateTime>(type: "datetime2", nullable: false),
                     dt_atualizacao = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    situacao = table.Column<string>(type: "nvarchar(1)", nullable: false)
+                    ativo = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -116,10 +116,10 @@ namespace DeliveryApi.Migrations
                 {
                     id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    descricao = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    nome = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     dt_cadastro = table.Column<DateTime>(type: "datetime2", nullable: false),
                     dt_atualizacao = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    situacao = table.Column<string>(type: "nvarchar(1)", nullable: false)
+                    ativo = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -133,7 +133,7 @@ namespace DeliveryApi.Migrations
                     id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     cidade = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    cep = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
+                    cep = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: true),
                     bairro = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     rua = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     quadra = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: true),
@@ -144,7 +144,7 @@ namespace DeliveryApi.Migrations
                     tipo_endereco_id = table.Column<int>(type: "int", nullable: false),
                     dt_cadastro = table.Column<DateTime>(type: "datetime2", nullable: false),
                     dt_atualizacao = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    situacao = table.Column<string>(type: "nvarchar(1)", nullable: false)
+                    ativo = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -170,7 +170,7 @@ namespace DeliveryApi.Migrations
                     endereco_id = table.Column<int>(type: "int", nullable: false),
                     dt_cadastro = table.Column<DateTime>(type: "datetime2", nullable: false),
                     dt_atualizacao = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    situacao = table.Column<string>(type: "nvarchar(1)", nullable: false)
+                    ativo = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -193,10 +193,11 @@ namespace DeliveryApi.Migrations
                     telefone = table.Column<string>(type: "nvarchar(16)", maxLength: 16, nullable: false),
                     email = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     senha = table.Column<string>(type: "nvarchar(22)", maxLength: 22, nullable: true),
+                    sexo = table.Column<string>(type: "nvarchar(1)", nullable: false),
                     empresa_id = table.Column<int>(type: "int", nullable: false),
                     dt_cadastro = table.Column<DateTime>(type: "datetime2", nullable: false),
                     dt_atualizacao = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    situacao = table.Column<string>(type: "nvarchar(1)", nullable: false)
+                    ativo = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -224,7 +225,7 @@ namespace DeliveryApi.Migrations
                     empresa_id = table.Column<int>(type: "int", nullable: false),
                     dt_cadastro = table.Column<DateTime>(type: "datetime2", nullable: false),
                     dt_atualizacao = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    situacao = table.Column<string>(type: "nvarchar(1)", nullable: false)
+                    ativo = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -264,7 +265,7 @@ namespace DeliveryApi.Migrations
                     tipo_usuario_id = table.Column<int>(type: "int", nullable: false),
                     dt_cadastro = table.Column<DateTime>(type: "datetime2", nullable: false),
                     dt_atualizacao = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    situacao = table.Column<string>(type: "nvarchar(1)", nullable: false)
+                    ativo = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -297,7 +298,7 @@ namespace DeliveryApi.Migrations
                     empresa_id = table.Column<int>(type: "int", nullable: false),
                     dt_cadastro = table.Column<DateTime>(type: "datetime2", nullable: false),
                     dt_atualizacao = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    situacao = table.Column<string>(type: "nvarchar(1)", nullable: false)
+                    ativo = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {

@@ -35,7 +35,7 @@ namespace DeliveryApi.Controllers
             {
                 tipoEndereco.DtCadastro = DateTime.Now;
                 tipoEndereco.DtAtualizacao = DateTime.Now;
-                tipoEndereco.Situacao = 'A';
+                tipoEndereco.Ativo = true;
 
                 var id = tipoEnderecoRepository.Create(tipoEndereco);
 
@@ -66,7 +66,7 @@ namespace DeliveryApi.Controllers
                     DescricaoCompleta = ex.ToString(),
                     DtCadastro = DateTime.Now,
                     DtAtualizacao = DateTime.Now,
-                    Situacao = 'A'
+                    Ativo = true
                 };
 
                 ErroService.NotifyError(erro, domain);
@@ -85,8 +85,8 @@ namespace DeliveryApi.Controllers
             {
                 var newTipoEndereco = tipoEnderecoRepository.Get(tipoEndereco.Id);
 
-                newTipoEndereco.Descricao = tipoEndereco.Descricao;
-                newTipoEndereco.Situacao = tipoEndereco.Situacao;
+                newTipoEndereco.Nome = tipoEndereco.Nome;
+                newTipoEndereco.Ativo = tipoEndereco.Ativo;
                 newTipoEndereco.DtAtualizacao = DateTime.Now;
 
                 var result = tipoEnderecoRepository.Update(newTipoEndereco);
@@ -115,7 +115,7 @@ namespace DeliveryApi.Controllers
                     RegistroCorrenteId = tipoEndereco.Id,
                     DtCadastro = DateTime.Now,
                     DtAtualizacao = DateTime.Now,
-                    Situacao = 'A'
+                    Ativo = true
                 };
 
                 ErroService.NotifyError(erro, domain);
@@ -159,7 +159,7 @@ namespace DeliveryApi.Controllers
                     RegistroCorrenteId = tipoEnderecoId,
                     DtCadastro = DateTime.Now,
                     DtAtualizacao = DateTime.Now,
-                    Situacao = 'A'
+                    Ativo = true
                 };
 
                 ErroService.NotifyError(erro, domain);
@@ -203,7 +203,7 @@ namespace DeliveryApi.Controllers
                     RegistroCorrenteId = tipoEnderecoId,
                     DtCadastro = DateTime.Now,
                     DtAtualizacao = DateTime.Now,
-                    Situacao = 'A'
+                    Ativo = true
                 };
 
                 ErroService.NotifyError(erro, domain);
@@ -245,7 +245,7 @@ namespace DeliveryApi.Controllers
                     DescricaoCompleta = ex.ToString(),
                     DtCadastro = DateTime.Now,
                     DtAtualizacao = DateTime.Now,
-                    Situacao = 'A'
+                    Ativo = true
                 };
 
                 ErroService.NotifyError(erro, domain);

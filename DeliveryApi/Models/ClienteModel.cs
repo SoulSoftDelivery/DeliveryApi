@@ -20,8 +20,8 @@ namespace DeliveryApi.Models
         [Column("senha")]
         [StringLength(22)]
         public string Senha { get; set; }
-        //[Column("sexo")]
-        //public char Sexo { get; set; }
+        [Column("sexo")]
+        public char Sexo { get; set; }
         [Column("empresa_id")]
         [ForeignKey("Empresa")]
         [Required]

@@ -15,8 +15,8 @@ namespace DeliveryApi.Models.Base
         [Column("dt_atualizacao")]
         [Required]
         public DateTime DtAtualizacao { get; set; }
-        [Column("situacao")]
+        [Column("ativo")]
         [Required]
-        public char Situacao { get; set; }
+        public bool Ativo { get; set; }
     }
 }

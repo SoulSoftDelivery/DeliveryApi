@@ -35,7 +35,7 @@ namespace DeliveryApi.Controllers
             {
                 categoriaProduto.DtCadastro = DateTime.Now;
                 categoriaProduto.DtAtualizacao = DateTime.Now;
-                categoriaProduto.Situacao = 'A';
+                categoriaProduto.Ativo = true;
 
                 var id = categoriaProdutoRepository.Create(categoriaProduto);
 
@@ -66,7 +66,7 @@ namespace DeliveryApi.Controllers
                     DescricaoCompleta = ex.ToString(),
                     DtCadastro = DateTime.Now,
                     DtAtualizacao = DateTime.Now,
-                    Situacao = 'A'
+                    Ativo = true
                 };
 
                 ErroService.NotifyError(erro, domain);
@@ -85,8 +85,8 @@ namespace DeliveryApi.Controllers
             {
                 var newCategoriaProduto = categoriaProdutoRepository.Get(categoriaProduto.Id);
 
-                newCategoriaProduto.Descricao = categoriaProduto.Descricao;
-                newCategoriaProduto.Situacao = categoriaProduto.Situacao;
+                newCategoriaProduto.Nome = categoriaProduto.Nome;
+                newCategoriaProduto.Ativo = categoriaProduto.Ativo;
                 newCategoriaProduto.DtAtualizacao = DateTime.Now;
 
                 var result = categoriaProdutoRepository.Update(newCategoriaProduto);
@@ -115,7 +115,7 @@ namespace DeliveryApi.Controllers
                     RegistroCorrenteId = categoriaProduto.Id,
                     DtCadastro = DateTime.Now,
                     DtAtualizacao = DateTime.Now,
-                    Situacao = 'A'
+                    Ativo = true
                 };
 
                 ErroService.NotifyError(erro, domain);
@@ -159,7 +159,7 @@ namespace DeliveryApi.Controllers
                     RegistroCorrenteId = categoriaProdutoId,
                     DtCadastro = DateTime.Now,
                     DtAtualizacao = DateTime.Now,
-                    Situacao = 'A'
+                    Ativo = true
                 };
 
                 ErroService.NotifyError(erro, domain);
@@ -203,7 +203,7 @@ namespace DeliveryApi.Controllers
                     RegistroCorrenteId = categoriaProdutoId,
                     DtCadastro = DateTime.Now,
                     DtAtualizacao = DateTime.Now,
-                    Situacao = 'A'
+                    Ativo = true
                 };
 
                 ErroService.NotifyError(erro, domain);
@@ -245,7 +245,7 @@ namespace DeliveryApi.Controllers
                     DescricaoCompleta = ex.ToString(),
                     DtCadastro = DateTime.Now,
                     DtAtualizacao = DateTime.Now,
-                    Situacao = 'A'
+                    Ativo = true
                 };
 
                 ErroService.NotifyError(erro, domain);

@@ -6,10 +6,10 @@ namespace DeliveryApi.Models
 {
     public class CategoriaProdutoModel : BaseEntity
     {
-        [Column("descricao")]
+        [Column("nome")]
         [StringLength(50)]
         [Required]
-        public string Descricao { get; set; }
+        public string Nome { get; set; }
 
         //[ForeignKey("Empresa")]
         //[Required]

@@ -46,7 +46,7 @@ namespace DeliveryApi.Controllers
 
                 usuario.DtCadastro = DateTime.Now;
                 usuario.DtAtualizacao = DateTime.Now;
-                usuario.Situacao = 'A';
+                usuario.Ativo = true;
                 usuario.Senha = SecurityService.Criptografar(usuario.Senha);
 
                 var id = usuarioRepository.Create(usuario);
@@ -78,7 +78,7 @@ namespace DeliveryApi.Controllers
                     DescricaoCompleta = ex.ToString(),
                     DtCadastro = DateTime.Now,
                     DtAtualizacao = DateTime.Now,
-                    Situacao = 'A'
+                    Ativo = true
                 };
 
                 ErroService.NotifyError(erro, domain);
@@ -100,7 +100,7 @@ namespace DeliveryApi.Controllers
                 newUsuario.Nome = usuario.Nome;
                 newUsuario.Telefone = usuario.Telefone;
                 newUsuario.Email = usuario.Email;
-                newUsuario.Situacao = usuario.Situacao;
+                newUsuario.Ativo = usuario.Ativo;
                 newUsuario.DtAtualizacao = DateTime.Now;
 
                 var result = usuarioRepository.Update(newUsuario);
@@ -129,7 +129,7 @@ namespace DeliveryApi.Controllers
                     RegistroCorrenteId = usuario.Id,
                     DtCadastro = DateTime.Now,
                     DtAtualizacao = DateTime.Now,
-                    Situacao = 'A'
+                    Ativo = true
                 };
 
                 ErroService.NotifyError(erro, domain);
@@ -173,7 +173,7 @@ namespace DeliveryApi.Controllers
                     RegistroCorrenteId = usuarioId,
                     DtCadastro = DateTime.Now,
                     DtAtualizacao = DateTime.Now,
-                    Situacao = 'A'
+                    Ativo = true
                 };
 
                 ErroService.NotifyError(erro, domain);
@@ -217,7 +217,7 @@ namespace DeliveryApi.Controllers
                     RegistroCorrenteId = usuarioId,
                     DtCadastro = DateTime.Now,
                     DtAtualizacao = DateTime.Now,
-                    Situacao = 'A'
+                    Ativo = true
                 };
 
                 ErroService.NotifyError(erro, domain);
@@ -278,7 +278,7 @@ namespace DeliveryApi.Controllers
                     RegistroCorrenteId = empresaId,
                     DtCadastro = DateTime.Now,
                     DtAtualizacao = DateTime.Now,
-                    Situacao = 'A'
+                    Ativo = true
                 };
 
                 ErroService.NotifyError(erro, domain);
@@ -337,7 +337,7 @@ namespace DeliveryApi.Controllers
                     RegistroCorrenteId = editPassword.UsuarioId,
                     DtCadastro = DateTime.Now,
                     DtAtualizacao = DateTime.Now,
-                    Situacao = 'A'
+                    Ativo = true
                 };
 
                 ErroService.NotifyError(erro, domain);

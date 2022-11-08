@@ -27,11 +27,9 @@ namespace DeliveryApi.Migrations
                         .HasColumnName("id")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Descricao")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
-                        .HasColumnName("descricao");
+                    b.Property<bool>("Ativo")
+                        .HasColumnType("bit")
+                        .HasColumnName("ativo");
 
                     b.Property<DateTime>("DtAtualizacao")
                         .HasColumnType("datetime2")
@@ -41,10 +39,11 @@ namespace DeliveryApi.Migrations
                         .HasColumnType("datetime2")
                         .HasColumnName("dt_cadastro");
 
-                    b.Property<string>("Situacao")
+                    b.Property<string>("Nome")
                         .IsRequired()
-                        .HasColumnType("nvarchar(1)")
-                        .HasColumnName("situacao");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("nome");
 
                     b.HasKey("Id");
 
@@ -58,6 +57,10 @@ namespace DeliveryApi.Migrations
                         .HasColumnType("int")
                         .HasColumnName("id")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("Ativo")
+                        .HasColumnType("bit")
+                        .HasColumnName("ativo");
 
                     b.Property<DateTime>("DtAtualizacao")
                         .HasColumnType("datetime2")
@@ -87,10 +90,10 @@ namespace DeliveryApi.Migrations
                         .HasColumnType("nvarchar(22)")
                         .HasColumnName("senha");
 
-                    b.Property<string>("Situacao")
+                    b.Property<string>("Sexo")
                         .IsRequired()
                         .HasColumnType("nvarchar(1)")
-                        .HasColumnName("situacao");
+                        .HasColumnName("sexo");
 
                     b.Property<string>("Telefone")
                         .IsRequired()
@@ -112,6 +115,10 @@ namespace DeliveryApi.Migrations
                         .HasColumnType("int")
                         .HasColumnName("id")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("Ativo")
+                        .HasColumnType("bit")
+                        .HasColumnName("ativo");
 
                     b.Property<string>("Cnpj")
                         .IsRequired()
@@ -143,11 +150,6 @@ namespace DeliveryApi.Migrations
                         .HasColumnType("nvarchar(100)")
                         .HasColumnName("nome");
 
-                    b.Property<string>("Situacao")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(1)")
-                        .HasColumnName("situacao");
-
                     b.Property<string>("Telefone")
                         .HasMaxLength(16)
                         .HasColumnType("nvarchar(16)")
@@ -168,6 +170,10 @@ namespace DeliveryApi.Migrations
                         .HasColumnName("id")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<bool>("Ativo")
+                        .HasColumnType("bit")
+                        .HasColumnName("ativo");
+
                     b.Property<string>("Bairro")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -175,7 +181,6 @@ namespace DeliveryApi.Migrations
                         .HasColumnName("bairro");
 
                     b.Property<string>("Cep")
-                        .IsRequired()
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)")
                         .HasColumnName("cep");
@@ -224,11 +229,6 @@ namespace DeliveryApi.Migrations
                         .HasColumnType("nvarchar(100)")
                         .HasColumnName("rua");
 
-                    b.Property<string>("Situacao")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(1)")
-                        .HasColumnName("situacao");
-
                     b.Property<int>("TipoEnderecoId")
                         .HasColumnType("int")
                         .HasColumnName("tipo_endereco_id");
@@ -247,6 +247,10 @@ namespace DeliveryApi.Migrations
                         .HasColumnType("int")
                         .HasColumnName("id")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("Ativo")
+                        .HasColumnType("bit")
+                        .HasColumnName("ativo");
 
                     b.Property<string>("Descricao")
                         .HasMaxLength(255)
@@ -281,11 +285,6 @@ namespace DeliveryApi.Migrations
                         .HasColumnType("int")
                         .HasColumnName("registro_corrente_id");
 
-                    b.Property<string>("Situacao")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(1)")
-                        .HasColumnName("situacao");
-
                     b.Property<int>("StatusCode")
                         .HasColumnType("int")
                         .HasColumnName("status_code");
@@ -307,6 +306,10 @@ namespace DeliveryApi.Migrations
                         .HasColumnName("id")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<bool>("Ativo")
+                        .HasColumnType("bit")
+                        .HasColumnName("ativo");
+
                     b.Property<int>("ClienteId")
                         .HasColumnType("int")
                         .HasColumnName("cliente_id");
@@ -326,11 +329,6 @@ namespace DeliveryApi.Migrations
                     b.Property<int>("EnderecoId")
                         .HasColumnType("int")
                         .HasColumnName("endereco_id");
-
-                    b.Property<string>("Situacao")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(1)")
-                        .HasColumnName("situacao");
 
                     b.Property<int>("SituacaoPedidoId")
                         .HasColumnType("int")
@@ -401,6 +399,10 @@ namespace DeliveryApi.Migrations
                         .HasColumnName("id")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<bool>("Ativo")
+                        .HasColumnType("bit")
+                        .HasColumnName("ativo");
+
                     b.Property<int>("CategoriaProdutoId")
                         .HasColumnType("int")
                         .HasColumnName("categoria_produto_id");
@@ -432,11 +434,6 @@ namespace DeliveryApi.Migrations
                         .HasColumnType("int")
                         .HasColumnName("qtd");
 
-                    b.Property<string>("Situacao")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(1)")
-                        .HasColumnName("situacao");
-
                     b.Property<int>("TipoMedidaId")
                         .HasColumnType("int")
                         .HasColumnName("tipo_medida_id");
@@ -464,11 +461,9 @@ namespace DeliveryApi.Migrations
                         .HasColumnName("id")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Descricao")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)")
-                        .HasColumnName("descricao");
+                    b.Property<bool>("Ativo")
+                        .HasColumnType("bit")
+                        .HasColumnName("ativo");
 
                     b.Property<DateTime>("DtAtualizacao")
                         .HasColumnType("datetime2")
@@ -478,10 +473,11 @@ namespace DeliveryApi.Migrations
                         .HasColumnType("datetime2")
                         .HasColumnName("dt_cadastro");
 
-                    b.Property<string>("Situacao")
+                    b.Property<string>("Nome")
                         .IsRequired()
-                        .HasColumnType("nvarchar(1)")
-                        .HasColumnName("situacao");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
+                        .HasColumnName("nome");
 
                     b.HasKey("Id");
 
@@ -496,11 +492,9 @@ namespace DeliveryApi.Migrations
                         .HasColumnName("id")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Descricao")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
-                        .HasColumnName("descricao");
+                    b.Property<bool>("Ativo")
+                        .HasColumnType("bit")
+                        .HasColumnName("ativo");
 
                     b.Property<DateTime>("DtAtualizacao")
                         .HasColumnType("datetime2")
@@ -510,10 +504,11 @@ namespace DeliveryApi.Migrations
                         .HasColumnType("datetime2")
                         .HasColumnName("dt_cadastro");
 
-                    b.Property<string>("Situacao")
+                    b.Property<string>("Nome")
                         .IsRequired()
-                        .HasColumnType("nvarchar(1)")
-                        .HasColumnName("situacao");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("nome");
 
                     b.HasKey("Id");
 
@@ -528,11 +523,9 @@ namespace DeliveryApi.Migrations
                         .HasColumnName("id")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Descricao")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
-                        .HasColumnName("descricao");
+                    b.Property<bool>("Ativo")
+                        .HasColumnType("bit")
+                        .HasColumnName("ativo");
 
                     b.Property<DateTime>("DtAtualizacao")
                         .HasColumnType("datetime2")
@@ -542,10 +535,11 @@ namespace DeliveryApi.Migrations
                         .HasColumnType("datetime2")
                         .HasColumnName("dt_cadastro");
 
-                    b.Property<string>("Situacao")
+                    b.Property<string>("Nome")
                         .IsRequired()
-                        .HasColumnType("nvarchar(1)")
-                        .HasColumnName("situacao");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("nome");
 
                     b.HasKey("Id");
 
@@ -560,11 +554,9 @@ namespace DeliveryApi.Migrations
                         .HasColumnName("id")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Descricao")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)")
-                        .HasColumnName("descricao");
+                    b.Property<bool>("Ativo")
+                        .HasColumnType("bit")
+                        .HasColumnName("ativo");
 
                     b.Property<DateTime>("DtAtualizacao")
                         .HasColumnType("datetime2")
@@ -574,10 +566,11 @@ namespace DeliveryApi.Migrations
                         .HasColumnType("datetime2")
                         .HasColumnName("dt_cadastro");
 
-                    b.Property<string>("Situacao")
+                    b.Property<string>("Nome")
                         .IsRequired()
-                        .HasColumnType("nvarchar(1)")
-                        .HasColumnName("situacao");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
+                        .HasColumnName("nome");
 
                     b.HasKey("Id");
 
@@ -592,11 +585,9 @@ namespace DeliveryApi.Migrations
                         .HasColumnName("id")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Descricao")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
-                        .HasColumnName("descricao");
+                    b.Property<bool>("Ativo")
+                        .HasColumnType("bit")
+                        .HasColumnName("ativo");
 
                     b.Property<DateTime>("DtAtualizacao")
                         .HasColumnType("datetime2")
@@ -606,10 +597,11 @@ namespace DeliveryApi.Migrations
                         .HasColumnType("datetime2")
                         .HasColumnName("dt_cadastro");
 
-                    b.Property<string>("Situacao")
+                    b.Property<string>("Nome")
                         .IsRequired()
-                        .HasColumnType("nvarchar(1)")
-                        .HasColumnName("situacao");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("nome");
 
                     b.HasKey("Id");
 
@@ -623,6 +615,10 @@ namespace DeliveryApi.Migrations
                         .HasColumnType("int")
                         .HasColumnName("id")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("Ativo")
+                        .HasColumnType("bit")
+                        .HasColumnName("ativo");
 
                     b.Property<DateTime>("DtAtualizacao")
                         .HasColumnType("datetime2")
@@ -654,11 +650,6 @@ namespace DeliveryApi.Migrations
                     b.Property<string>("Senha")
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("senha");
-
-                    b.Property<string>("Situacao")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(1)")
-                        .HasColumnName("situacao");
 
                     b.Property<string>("Telefone")
                         .IsRequired()

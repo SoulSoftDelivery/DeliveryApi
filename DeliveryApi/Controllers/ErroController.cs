@@ -32,7 +32,7 @@ namespace DeliveryApi.Controllers
             {
                 erro.DtCadastro = DateTime.Now;
                 erro.DtAtualizacao = DateTime.Now;
-                erro.Situacao = 'A';
+                erro.Ativo = true;
 
                 var id = erroRepository.Notify(erro);
 
