@@ -6,6 +6,7 @@ using System.Net;
 using DeliveryApi.Services;
 using Microsoft.AspNetCore.Authorization;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace DeliveryApi.Controllers
 {
@@ -32,13 +33,14 @@ namespace DeliveryApi.Controllers
 
         [Route("/api/[controller]/Create")]
         [HttpPost]
-        public Response Create(ClienteEndereco clienteEndereco)
+        public async Task<IActionResult> Create(ClienteEndereco clienteEndereco)
         {
             try
             {
                 //Cadastro de Cliente
                 ClienteModel newCliente = new ClienteModel
                 {
+                    EmpresaId = clienteEndereco.EmpresaId,
                     Nome = clienteEndereco.Nome,
                     Telefone = clienteEndereco.Telefone,
                     Email = clienteEndereco.Email,
@@ -53,14 +55,15 @@ namespace DeliveryApi.Controllers
                 if (clienteId == 0)
                 {
                     response.ok = false;
-                    response.msg = errmsg;
+                    response.msg = "Não foi possível cadastrar o Cliente";
 
-                    return response;
+                    return StatusCode(500, response);
                 }
 
                 //Cadastro de Endereco
                 EnderecoModel newEndereco = new EnderecoModel
                 {
+                    Uf = clienteEndereco.Uf,
                     Bairro = clienteEndereco.Bairro,
                     Rua = clienteEndereco.Rua,
                     Cep = clienteEndereco.Cep,
@@ -70,6 +73,7 @@ namespace DeliveryApi.Controllers
                     Numero = clienteEndereco.Numero,
                     Complemento = clienteEndereco.Complemento,
                     ClienteId = clienteId,
+                    TipoEnderecoId = 2,
                     DtCadastro = DateTime.Now,
                     DtAtualizacao = DateTime.Now,
                     Ativo = true
@@ -80,14 +84,14 @@ namespace DeliveryApi.Controllers
                 if (enderecoId == 0)
                 {
                     response.ok = false;
-                    response.msg = "Erro no cadastro de endereço";
+                    response.msg = "Não foi possível cadastrar o Endereço do Cliente";
 
-                    return response;
+                    return StatusCode(500, response);
                 }
 
                 response.conteudo.Add(clienteId);
 
-                return response;
+                return Ok(response);
             }
             catch (Exception ex)
             {
@@ -111,7 +115,7 @@ namespace DeliveryApi.Controllers
 
                 response.ok = false;
                 response.msg = errmsg;
-                return response;
+                return StatusCode(500, response);
             }
         }
 
@@ -186,7 +190,7 @@ namespace DeliveryApi.Controllers
 
         [Route("/api/[controller]/Delete/{clienteId}")]
         [HttpDelete]
-        public Response Delete(int clienteId)
+        public async Task<IActionResult> Delete(int clienteId)
         {
             try
             {
@@ -199,14 +203,18 @@ namespace DeliveryApi.Controllers
                     response.ok = false;
                     response.msg = errmsg;
 
-                    return response;
+                    StatusCode(500, response);
                 }
 
                 //Deletando o Endereço do Cliente
                 var endereco = enderecoRepository.EnderecoByClienteId(clienteId);
-                enderecoRepository.Delete(endereco);
 
-                return response;
+                if (endereco != null)
+                {
+                    enderecoRepository.Delete(endereco);
+                }
+
+                return Ok(response);
             }
             catch (Exception ex)
             {
@@ -231,7 +239,7 @@ namespace DeliveryApi.Controllers
 
                 response.ok = false;
                 response.msg = errmsg;
-                return response;
+                return StatusCode(500, response);
             }
         }
 

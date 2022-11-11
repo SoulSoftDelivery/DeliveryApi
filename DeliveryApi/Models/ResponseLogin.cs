@@ -11,6 +11,8 @@ namespace DeliveryApi.Models
         public string Nome { get; set; }
         public string Telefone { get; set; }
         public string Email { get; set; }
+        public string Uf { get; set; }
+        public string Cidade { get; set; }
         public int EmpresaId { get; set; }
         public int TipoUsuarioId { get; set; }
         public string Token { get; set; }

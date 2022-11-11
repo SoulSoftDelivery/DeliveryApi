@@ -86,8 +86,18 @@ namespace DeliveryApi.Controllers
                 var newEmpresa = empresaRepository.Get(empresa.Id);
 
                 newEmpresa.Nome = empresa.Nome;
-                newEmpresa.Telefone = empresa.Telefone;
+                newEmpresa.Telefone1 = empresa.Telefone1;
+                newEmpresa.Telefone2 = empresa.Telefone2;
                 newEmpresa.Email = empresa.Email;
+                newEmpresa.Cidade = empresa.Cidade;
+                newEmpresa.Uf = empresa.Uf;
+                newEmpresa.Cep = empresa.Cep;
+                newEmpresa.Bairro = empresa.Bairro;
+                newEmpresa.Quadra = empresa.Quadra;
+                newEmpresa.Rua = empresa.Rua;
+                newEmpresa.Lote = empresa.Lote;
+                newEmpresa.Numero = empresa.Numero;
+                newEmpresa.Complemento = empresa.Complemento;
                 newEmpresa.Ativo = empresa.Ativo;
                 newEmpresa.DtAtualizacao = DateTime.Now;
 

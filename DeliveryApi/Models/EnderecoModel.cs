@@ -6,6 +6,10 @@ namespace DeliveryApi.Models
 {
     public class EnderecoModel : BaseEntity
     {
+        [Column("uf")]
+        [StringLength(2)]
+        [Required]
+        public string Uf { get; set; }
         [Column("cidade")]
         [StringLength(100)]
         [Required]

@@ -16,6 +16,7 @@ namespace DeliveryApi.Controllers
     public class AutenticadorController : Controller
     {
         IUsuarioRepository usuarioRepository;
+        IEmpresaRepository empresaRepository;
         private IConfiguration _config { get; }
 
         Response response = new Response
@@ -28,10 +29,12 @@ namespace DeliveryApi.Controllers
 
         public AutenticadorController(
             IUsuarioRepository UsuarioRepository,
+            IEmpresaRepository EmpresaRepository,
             IConfiguration Configuration
         )
         {
             usuarioRepository = UsuarioRepository;
+            empresaRepository = EmpresaRepository;
             _config = Configuration;
         }
 
@@ -68,6 +71,9 @@ namespace DeliveryApi.Controllers
                 TokenService.DeleteRefreshToken(login.Email);
                 TokenService.SaveRefreshToken(login.Email, refreshToken);
 
+                //Buscando o cadastro de empresa para endereço
+                var empresa = empresaRepository.Get(usuario.EmpresaId);
+
                 var responseLogin = new ResponseLogin
                 {
                     UsuarioId = usuario.Id,
@@ -76,6 +82,8 @@ namespace DeliveryApi.Controllers
                     Telefone = usuario.Telefone,
                     EmpresaId = usuario.EmpresaId,
                     TipoUsuarioId = usuario.TipoUsuarioId,
+                    Cidade = empresa.Cidade,
+                    Uf = empresa.Uf,
                     Token = token.Trim(),
                     RefreshToken = refreshToken.Trim()
                 };
@@ -130,6 +138,9 @@ namespace DeliveryApi.Controllers
 
                 var usuario = usuarioRepository.ConsultaPorEmail(usuarioEmail);
 
+                //Buscando o cadastro de empresa para endereço
+                var empresa = empresaRepository.Get(usuario.EmpresaId);
+
                 var responseLogin = new ResponseLogin
                 {
                     UsuarioId = usuario.Id,
@@ -137,6 +148,8 @@ namespace DeliveryApi.Controllers
                     Email = usuario.Email,
                     Telefone = usuario.Telefone,
                     EmpresaId = usuario.EmpresaId,
+                    Cidade = empresa.Cidade,
+                    Uf = empresa.Uf,
                     TipoUsuarioId = usuario.TipoUsuarioId,
                     Token = newJwtToken,
                     RefreshToken = newRefreshToken
