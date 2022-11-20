@@ -10,6 +10,7 @@ namespace DeliveryApi.Controllers
 {
     [Authorize]
     [ApiController]
+    [Route("/api/[controller]")]
     public class CategoriaProdutoController : Controller
     {
         ICategoriaProdutoRepository categoriaProdutoRepository;
@@ -27,9 +28,8 @@ namespace DeliveryApi.Controllers
             categoriaProdutoRepository = CategoriaProdutoRepository;
         }
 
-        [Route("/api/[controller]/Create")]
         [HttpPost]
-        public Response Create(CategoriaProdutoModel categoriaProduto)
+        public ActionResult<Response> Post(CategoriaProdutoModel categoriaProduto)
         {
             try
             {
@@ -73,13 +73,12 @@ namespace DeliveryApi.Controllers
 
                 response.ok = false;
                 response.msg = errmsg;
-                return response;
+                return StatusCode(500, response);
             }
         }
 
-        [Route("/api/[controller]/Update")]
-        [HttpPatch]
-        public Response Update(CategoriaProdutoModel categoriaProduto)
+        [HttpPut]
+        public ActionResult<Response> Put(CategoriaProdutoModel categoriaProduto)
         {
             try
             {
@@ -122,13 +121,12 @@ namespace DeliveryApi.Controllers
 
                 response.ok = false;
                 response.msg = errmsg;
-                return response;
+                return StatusCode(500, response);
             }
         }
 
-        [Route("/api/[controller]/Delete/{categoriaProdutoId}")]
         [HttpDelete]
-        public Response Delete(int categoriaProdutoId)
+        public ActionResult<Response> Delete(int categoriaProdutoId)
         {
             try
             {
@@ -166,13 +164,12 @@ namespace DeliveryApi.Controllers
 
                 response.ok = false;
                 response.msg = errmsg;
-                return response;
+                return StatusCode(500, response);
             }
         }
 
-        [Route("/api/[controller]/Get/{categoriaProdutoId}")]
-        [HttpGet]
-        public Response Get(int categoriaProdutoId)
+        [HttpGet("{categoriaProdutoId}")]
+        public ActionResult<Response> Get(int categoriaProdutoId)
         {
             try
             {
@@ -210,13 +207,12 @@ namespace DeliveryApi.Controllers
 
                 response.ok = false;
                 response.msg = errmsg;
-                return response;
+                return StatusCode(500, response);
             }
         }
 
-        [Route("/api/[controller]/List")]
         [HttpGet]
-        public Response List()
+        public ActionResult<Response> Get()
         {
             try
             {
@@ -252,7 +248,7 @@ namespace DeliveryApi.Controllers
 
                 response.ok = false;
                 response.msg = errmsg;
-                return response;
+                return StatusCode(500, response);
             }
         }
     }

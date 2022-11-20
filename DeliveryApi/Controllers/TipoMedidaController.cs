@@ -10,6 +10,7 @@ namespace DeliveryApi.Controllers
 {
     [Authorize]
     [ApiController]
+    [Route("/api/[controller]")]
     public class TipoMedidaController : Controller
     {
         ITipoMedidaRepository tipoMedidaRepository;
@@ -27,9 +28,8 @@ namespace DeliveryApi.Controllers
             tipoMedidaRepository = TipoMedidaRepository;
         }
 
-        [Route("/api/[controller]/Create")]
         [HttpPost]
-        public Response Create(TipoMedidaModel tipomedida)
+        public ActionResult<Response> Post(TipoMedidaModel tipomedida)
         {
             try
             {
@@ -73,13 +73,12 @@ namespace DeliveryApi.Controllers
 
                 response.ok = false;
                 response.msg = errmsg;
-                return response;
+                return StatusCode(500, response);
             }
         }
 
-        [Route("/api/[controller]/Update")]
-        [HttpPatch]
-        public Response Update(TipoMedidaModel tipoMedida)
+        [HttpPut]
+        public ActionResult<Response> Put(TipoMedidaModel tipoMedida)
         {
             try
             {
@@ -122,13 +121,12 @@ namespace DeliveryApi.Controllers
 
                 response.ok = false;
                 response.msg = errmsg;
-                return response;
+                return StatusCode(500, response);
             }
         }
 
-        [Route("/api/[controller]/Delete/{tipoMedidaId}")]
         [HttpDelete]
-        public Response Delete(int tipoMedidaId)
+        public ActionResult<Response> Delete(int tipoMedidaId)
         {
             try
             {
@@ -166,13 +164,12 @@ namespace DeliveryApi.Controllers
 
                 response.ok = false;
                 response.msg = errmsg;
-                return response;
+                return StatusCode(500, response);
             }
         }
 
-        [Route("/api/[controller]/Get/{tipoMedidaId}")]
-        [HttpGet]
-        public Response Get(int tipoMedidaId)
+        [HttpGet("{tipoMedidaId}")]
+        public ActionResult<Response> Get(int tipoMedidaId)
         {
             try
             {
@@ -210,13 +207,12 @@ namespace DeliveryApi.Controllers
 
                 response.ok = false;
                 response.msg = errmsg;
-                return response;
+                return StatusCode(500, response);
             }
         }
 
-        [Route("/api/[controller]/List")]
         [HttpGet]
-        public Response List()
+        public ActionResult<Response> Get()
         {
             try
             {
@@ -252,7 +248,7 @@ namespace DeliveryApi.Controllers
 
                 response.ok = false;
                 response.msg = errmsg;
-                return response;
+                return StatusCode(500, response);
             }
         }
     }

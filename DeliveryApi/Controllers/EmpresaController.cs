@@ -10,6 +10,7 @@ namespace DeliveryApi.Controllers
 {
     [Authorize]
     [ApiController]
+    [Route("/api/[controller]")]
     public class EmpresaController : Controller
     {
         IEmpresaRepository empresaRepository;
@@ -27,9 +28,8 @@ namespace DeliveryApi.Controllers
             empresaRepository = EmpresaRepository;
         }
 
-        [Route("/api/[controller]/Create")]
         [HttpPost]
-        public Response Create(EmpresaModel empresa)
+        public ActionResult<Response> Post(EmpresaModel empresa)
         {
             try
             {
@@ -73,13 +73,12 @@ namespace DeliveryApi.Controllers
 
                 response.ok = false;
                 response.msg = errmsg;
-                return response;
+                return StatusCode(500, response);
             }
         }
 
-        [Route("/api/[controller]/Update")]
-        [HttpPatch]
-        public Response Update(EmpresaModel empresa)
+        [HttpPut]
+        public ActionResult<Response> Put(EmpresaModel empresa)
         {
             try
             {
@@ -134,13 +133,12 @@ namespace DeliveryApi.Controllers
 
                 response.ok = false;
                 response.msg = errmsg;
-                return response;
+                return StatusCode(500, response);
             }
         }
 
-        [Route("/api/[controller]/Delete/{empresaId}")]
         [HttpDelete]
-        public Response Delete(int empresaId)
+        public ActionResult<Response> Delete(int empresaId)
         {
             try
             {
@@ -178,13 +176,12 @@ namespace DeliveryApi.Controllers
 
                 response.ok = false;
                 response.msg = errmsg;
-                return response;
+                return StatusCode(500, response);
             }
         }
 
-        [Route("/api/[controller]/Get/{empresaId}")]
-        [HttpGet]
-        public Response Get(int empresaId)
+        [HttpGet("{empresaId}")]
+        public ActionResult<Response> Get(int empresaId)
         {
             try
             {
@@ -222,13 +219,12 @@ namespace DeliveryApi.Controllers
 
                 response.ok = false;
                 response.msg = errmsg;
-                return response;
+                return StatusCode(500, response);
             }
         }
 
-        [Route("/api/[controller]/List")]
         [HttpGet]
-        public Response List()
+        public ActionResult<Response> Get()
         {
             try
             {
@@ -264,7 +260,7 @@ namespace DeliveryApi.Controllers
 
                 response.ok = false;
                 response.msg = errmsg;
-                return response;
+                return StatusCode(500, response);
             }
         }
     }

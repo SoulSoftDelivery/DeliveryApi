@@ -6,12 +6,12 @@ using System.Net;
 using DeliveryApi.Services;
 using Microsoft.AspNetCore.Authorization;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace DeliveryApi.Controllers
 {
     [Authorize]
     [ApiController]
+    [Route("/api/[controller]")]
     public class ClienteController : Controller
     {
         IClienteRepository clienteRepository;
@@ -31,9 +31,8 @@ namespace DeliveryApi.Controllers
             enderecoRepository = EnderecoRepository;
         }
 
-        [Route("/api/[controller]/Create")]
         [HttpPost]
-        public async Task<IActionResult> Create(ClienteEndereco clienteEndereco)
+        public ActionResult<Response> Post(ClienteEndereco clienteEndereco)
         {
             try
             {
@@ -119,9 +118,8 @@ namespace DeliveryApi.Controllers
             }
         }
 
-        [Route("/api/[controller]/Update")]
-        [HttpPatch]
-        public Response Update(ClienteEndereco clienteEndereco)
+        [HttpPut]
+        public ActionResult<Response> Put(ClienteEndereco clienteEndereco)
         {
             try
             {
@@ -142,7 +140,7 @@ namespace DeliveryApi.Controllers
                     response.ok = false;
                     response.msg = errmsg;
 
-                    return response;
+                    return NotFound(response);
                 }
 
                 var newEndereco = enderecoRepository.Get(clienteEndereco.EnderecoId);
@@ -184,13 +182,12 @@ namespace DeliveryApi.Controllers
 
                 response.ok = false;
                 response.msg = errmsg;
-                return response;
+                return StatusCode(500, response);
             }
         }
 
-        [Route("/api/[controller]/Delete/{clienteId}")]
         [HttpDelete]
-        public async Task<IActionResult> Delete(int clienteId)
+        public ActionResult<Response> Delete(int clienteId)
         {
             try
             {
@@ -243,9 +240,8 @@ namespace DeliveryApi.Controllers
             }
         }
 
-        [Route("/api/[controller]/Get/{clienteId}")]
-        [HttpGet]
-        public Response Get(int clienteId)
+        [HttpGet("{clienteId}")]
+        public ActionResult<Response> Get(int clienteId)
         {
             try
             {
@@ -311,13 +307,12 @@ namespace DeliveryApi.Controllers
 
                 response.ok = false;
                 response.msg = errmsg;
-                return response;
+                return StatusCode(500, response);
             }
         }
 
-        [Route("/api/[controller]/List")]
         [HttpGet]
-        public Response List(int empresaId, string searchText, int page, int pageSize)
+        public ActionResult<Response> Get(int empresaId, string searchText, int page, int pageSize)
         {
             try
             {
@@ -330,7 +325,7 @@ namespace DeliveryApi.Controllers
                     response.ok = false;
                     response.msg = errmsg;
 
-                    return response;
+                    return NotFound(response);
                 }
 
                 //Filtro da pesquisa
@@ -386,7 +381,7 @@ namespace DeliveryApi.Controllers
 
                 response.ok = false;
                 response.msg = errmsg;
-                return response;
+                return StatusCode(500, response);
             }
         }
     }
