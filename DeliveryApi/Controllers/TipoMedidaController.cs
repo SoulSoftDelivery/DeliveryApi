@@ -125,7 +125,7 @@ namespace DeliveryApi.Controllers
             }
         }
 
-        [HttpDelete]
+        [HttpDelete("{tipoMedidaId}")]
         public ActionResult<Response> Delete(int tipoMedidaId)
         {
             try

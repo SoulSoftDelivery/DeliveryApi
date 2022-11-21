@@ -137,7 +137,7 @@ namespace DeliveryApi.Controllers
             }
         }
 
-        [HttpDelete]
+        [HttpDelete("{empresaId}")]
         public ActionResult<Response> Delete(int empresaId)
         {
             try
