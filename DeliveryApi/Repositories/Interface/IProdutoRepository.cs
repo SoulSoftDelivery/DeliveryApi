@@ -8,7 +8,7 @@ namespace DeliveryApi.Repositories.Interface
         int Create(ProdutoModel produto);
         bool Update(ProdutoModel produto);
         bool Delete(ProdutoModel produto);
-        ProdutoModel Get(int produtoId);
-        List<ProdutoModel> List(int empresaId);
+        ProdutoModel GetById(int produtoId);
+        List<ProdutoModel> GetListByEmpresaId(int empresaId);
     }
 }

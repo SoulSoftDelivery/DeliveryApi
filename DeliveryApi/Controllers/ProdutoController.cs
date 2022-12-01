@@ -36,7 +36,6 @@ namespace DeliveryApi.Controllers
             {
                 produto.DtCadastro = DateTime.Now;
                 produto.DtAtualizacao = DateTime.Now;
-                produto.Ativo = true;
 
                 var id = produtoRepository.Create(produto);
 
@@ -60,7 +59,7 @@ namespace DeliveryApi.Controllers
                 {
                     StatusCode = (int)HttpStatusCode.InternalServerError,
                     NomeAplicacao = "DeliveryApi",
-                    NomeFuncao = "Create",
+                    NomeFuncao = "Post",
                     Url = domain + "/api/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName,
                     ParametroEntrada = Newtonsoft.Json.JsonConvert.SerializeObject(produto),
                     Descricao = ex.Message,
@@ -78,12 +77,12 @@ namespace DeliveryApi.Controllers
             }
         }
 
-        [HttpPut]
-        public ActionResult<Response> Put(ProdutoModel produto)
+        [HttpPatch]
+        public ActionResult<Response> Patch(ProdutoModel produto)
         {
             try
             {
-                var newProduto = produtoRepository.Get(produto.Id);
+                var newProduto = produtoRepository.GetById(produto.Id);
 
                 newProduto.Nome = produto.Nome;
                 newProduto.Descricao = produto.Descricao;
@@ -112,7 +111,7 @@ namespace DeliveryApi.Controllers
                 {
                     StatusCode = (int)HttpStatusCode.InternalServerError,
                     NomeAplicacao = "DeliveryApi",
-                    NomeFuncao = "Update",
+                    NomeFuncao = "Patch",
                     Url = domain + "/api/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName,
                     ParametroEntrada = Newtonsoft.Json.JsonConvert.SerializeObject(produto),
                     Descricao = ex.Message,
@@ -136,7 +135,16 @@ namespace DeliveryApi.Controllers
         {
             try
             {
-                var produto = produtoRepository.Get(produtoId);
+                var produto = produtoRepository.GetById(produtoId);
+
+                if (produto is null)
+                {
+                    response.ok = false;
+                    response.msg = "Produto não encontrado.";
+
+                    return NotFound(response);
+                }
+
                 var result = produtoRepository.Delete(produto);
 
                 if (!result)
@@ -179,13 +187,15 @@ namespace DeliveryApi.Controllers
         {
             try
             {
-                var produto = produtoRepository.Get(produtoId);
+                var produto = produtoRepository.GetById(produtoId);
 
                 if (produto == null)
                 {
                     response.ok = false;
                     response.msg = errmsg;
                 }
+
+                //produto.CategoriaProduto = categoriaRepository.Get(produto.CategoriaProdutoId);
 
                 response.conteudo.Add(produto);
                 return response;
@@ -218,18 +228,44 @@ namespace DeliveryApi.Controllers
         }
 
         [HttpGet]
-        public ActionResult<Response> Get(int empresaId, string searchText, int page, int pageSize)
+        public ActionResult<Response> Get(int empresaId, string nome, int categoriaProdutoId, int tipoMedidaId, int situacao, int page, int pageSize)
         {
             try
             {
-                var produtos = produtoRepository.List(empresaId)
+                var produtos = produtoRepository.GetListByEmpresaId(empresaId)
                     .OrderByDescending(x => x.DtCadastro)
                     .ToList();
 
-                if (produtos == null)
+                if (produtos is null)
                 {
                     response.ok = false;
                     response.msg = errmsg;
+                }
+
+                if (categoriaProdutoId != 0)
+                {
+                    produtos = produtos.Where(x => x.CategoriaProdutoId == categoriaProdutoId).ToList();
+                }
+
+                if (tipoMedidaId != 0)
+                {
+                    produtos = produtos.Where(x => x.TipoMedidaId == tipoMedidaId).ToList();
+                }
+
+                if (!string.IsNullOrEmpty(nome))
+                {
+                    produtos = produtos.Where(x => x.Nome.Contains(nome)).ToList();
+                }
+
+                if (situacao >= 1)
+                {
+                    if (situacao == 1)
+                    {
+                        produtos = produtos.Where(x => x.Ativo == true).ToList();
+                    } else
+                    {
+                        produtos = produtos.Where(x => x.Ativo == false).ToList();
+                    }
                 }
 
                 PaginationResponse paginationResponse = new PaginationResponse();
@@ -259,7 +295,7 @@ namespace DeliveryApi.Controllers
                 {
                     StatusCode = (int)HttpStatusCode.InternalServerError,
                     NomeAplicacao = "DeliveryApi",
-                    NomeFuncao = "List",
+                    NomeFuncao = "Get",
                     Url = domain + "/api/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName,
                     Descricao = ex.Message,
                     DescricaoCompleta = ex.ToString(),

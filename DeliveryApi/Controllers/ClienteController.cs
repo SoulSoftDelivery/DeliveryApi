@@ -118,8 +118,8 @@ namespace DeliveryApi.Controllers
             }
         }
 
-        [HttpPut]
-        public ActionResult<Response> Put(ClienteEndereco clienteEndereco)
+        [HttpPatch]
+        public ActionResult<Response> Patch(ClienteEndereco clienteEndereco)
         {
             try
             {
@@ -312,7 +312,7 @@ namespace DeliveryApi.Controllers
         }
 
         [HttpGet]
-        public ActionResult<Response> Get(int empresaId, string searchText, int page, int pageSize)
+        public ActionResult<Response> Get(int empresaId, string nome, int situacao, int page, int pageSize)
         {
             try
             {
@@ -329,15 +329,21 @@ namespace DeliveryApi.Controllers
                 }
 
                 //Filtro da pesquisa
-                if (!string.IsNullOrEmpty(searchText))
+                if (!string.IsNullOrEmpty(nome))
                 {
-                    clientes = clientes.Where(x =>
-                        (!string.IsNullOrEmpty(x.Nome) && x.Nome.Contains(searchText)) ||
-                        (!string.IsNullOrEmpty(x.Telefone) && x.Telefone.Contains(searchText)) ||
-                        (!string.IsNullOrEmpty(x.Email) && x.Email.Contains(searchText))
-                    )
-                    .OrderByDescending(x => x.DtCadastro)
-                    .ToList();
+                    clientes = clientes.Where(x => x.Nome.Contains(nome)).ToList();
+                }
+
+                if (situacao >= 1)
+                {
+                    if (situacao == 1)
+                    {
+                        clientes = clientes.Where(x => x.Ativo == true).ToList();
+                    }
+                    else
+                    {
+                        clientes = clientes.Where(x => x.Ativo == false).ToList();
+                    }
                 }
 
                 PaginationResponse paginationResponse = new PaginationResponse();
