@@ -12,6 +12,7 @@ namespace DeliveryApi.Controllers
     [Authorize]
     [ApiController]
     [Route("/api/[controller]")]
+    [ApiConventionType(typeof(DefaultApiConventions))]
     public class ProdutoController : Controller
     {
         IProdutoRepository produtoRepository;
@@ -130,7 +131,7 @@ namespace DeliveryApi.Controllers
             }
         }
 
-        [HttpDelete("{produtoId}")]
+        [HttpDelete("{produtoId:int:min(1)}")]
         public ActionResult<Response> Delete(int produtoId)
         {
             try
@@ -228,7 +229,7 @@ namespace DeliveryApi.Controllers
         }
 
         [HttpGet]
-        public ActionResult<Response> Get(int empresaId, string nome, int categoriaProdutoId, int tipoMedidaId, int situacao, int page, int pageSize)
+        public ActionResult<Response> Get([FromQuery] int empresaId, string nome, int categoriaProdutoId, int tipoMedidaId, int situacao, int page, int pageSize)
         {
             try
             {
@@ -285,7 +286,7 @@ namespace DeliveryApi.Controllers
                 paginationResponse.Results.Add(produtos.Skip((page - 1) * pageSize).Take(pageSize).ToList());
 
                 response.conteudo.Add(paginationResponse);
-                return response;
+                return Ok(response);
             }
             catch (Exception ex)
             {

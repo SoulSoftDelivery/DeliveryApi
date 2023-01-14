@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DeliveryApi.Repositories.Interface;
+using Microsoft.EntityFrameworkCore;
 
 namespace DeliveryApi.Repositories.Repository
 {
@@ -58,7 +59,7 @@ namespace DeliveryApi.Repositories.Repository
         {
             if (_context != null)
             {
-                var tipoPedido = _context.tipos_pedidos.FirstOrDefault(x => x.Id == tipoPedidoId);
+                var tipoPedido = _context.tipos_pedidos.AsNoTracking().FirstOrDefault(x => x.Id == tipoPedidoId);
                 return tipoPedido;
             }
 
@@ -69,7 +70,7 @@ namespace DeliveryApi.Repositories.Repository
         {
             if (_context != null)
             {
-                var tipospedidos = _context.tipos_pedidos.ToList();
+                var tipospedidos = _context.tipos_pedidos.AsNoTracking().ToList();
                 return tipospedidos;
             }
 

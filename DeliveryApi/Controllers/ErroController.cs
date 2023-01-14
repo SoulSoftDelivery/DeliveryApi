@@ -7,6 +7,8 @@ using System;
 namespace DeliveryApi.Controllers
 {
     [ApiController]
+    [Produces("application/json")]
+    [ApiConventionType(typeof(DefaultApiConventions))]
     public class ErroController : Controller
     {
         IErroRepository erroRepository;

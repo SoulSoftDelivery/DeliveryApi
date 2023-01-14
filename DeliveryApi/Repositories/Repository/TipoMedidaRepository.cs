@@ -59,7 +59,7 @@ namespace DeliveryApi.Repositories.Repository
         {
             if (_context != null)
             {
-                var tipoMedida = _context.tipos_medidas.FirstOrDefault(x => x.Id == tipoMedidaId);
+                var tipoMedida = _context.tipos_medidas.AsNoTracking().FirstOrDefault(x => x.Id == tipoMedidaId);
                 return tipoMedida;
             }
 
@@ -70,7 +70,7 @@ namespace DeliveryApi.Repositories.Repository
         {
             if (_context != null)
             {
-                var tiposmedidas = _context.tipos_medidas.ToList();
+                var tiposmedidas = _context.tipos_medidas.AsNoTracking().ToList();
                 return tiposmedidas;
             }
 

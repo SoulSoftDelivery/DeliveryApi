@@ -18,7 +18,7 @@ namespace DeliveryApi.Models
         public int Qtd { get; set; }
         [Column("valor")]
         [Required]
-        public double Valor { get; set; }
+        public float Valor { get; set; }
         [Column("categoria_produto_id")]
         [ForeignKey("CategoriaProduto")]
         [Required]

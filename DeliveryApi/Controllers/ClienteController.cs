@@ -12,6 +12,7 @@ namespace DeliveryApi.Controllers
     [Authorize]
     [ApiController]
     [Route("/api/[controller]")]
+    [ApiConventionType(typeof(DefaultApiConventions))]
     public class ClienteController : Controller
     {
         IClienteRepository clienteRepository;
@@ -312,7 +313,7 @@ namespace DeliveryApi.Controllers
         }
 
         [HttpGet]
-        public ActionResult<Response> Get(int empresaId, string nome, int situacao, int page, int pageSize)
+        public ActionResult<Response> Get([FromQuery] int empresaId, string nome, int situacao, int page, int pageSize)
         {
             try
             {

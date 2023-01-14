@@ -59,7 +59,7 @@ namespace DeliveryApi.Repositories.Repository
         {
             if (_context != null)
             {
-                var tipoUsuario = _context.tipos_usuarios.FirstOrDefault(x => x.Id == tipoUsuarioId);
+                var tipoUsuario = _context.tipos_usuarios.AsNoTracking().FirstOrDefault(x => x.Id == tipoUsuarioId);
                 return tipoUsuario;
             }
 
@@ -70,7 +70,7 @@ namespace DeliveryApi.Repositories.Repository
         {
             if (_context != null)
             {
-                var tiposUsuarios = _context.tipos_usuarios.ToList();
+                var tiposUsuarios = _context.tipos_usuarios.AsNoTracking().ToList();
                 return tiposUsuarios;
             }
 

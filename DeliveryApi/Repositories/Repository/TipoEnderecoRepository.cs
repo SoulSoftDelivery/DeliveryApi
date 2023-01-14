@@ -59,7 +59,7 @@ namespace DeliveryApi.Repositories.Repository
         {
             if (_context != null)
             {
-                var tipoEndereco = _context.tipos_enderecos.FirstOrDefault(x => x.Id == tipoEnderecoId);
+                var tipoEndereco = _context.tipos_enderecos.AsNoTracking().FirstOrDefault(x => x.Id == tipoEnderecoId);
                 return tipoEndereco;
             }
 
@@ -70,7 +70,7 @@ namespace DeliveryApi.Repositories.Repository
         {
             if (_context != null)
             {
-                var tiposUsuarios = _context.tipos_enderecos.ToList();
+                var tiposUsuarios = _context.tipos_enderecos.AsNoTracking().ToList();
                 return tiposUsuarios;
             }
 

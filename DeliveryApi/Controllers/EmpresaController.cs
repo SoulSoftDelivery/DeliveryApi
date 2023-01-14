@@ -11,6 +11,8 @@ namespace DeliveryApi.Controllers
     [Authorize]
     [ApiController]
     [Route("/api/[controller]")]
+    [Produces("application/json")]
+    [ApiConventionType(typeof(DefaultApiConventions))]
     public class EmpresaController : Controller
     {
         IEmpresaRepository empresaRepository;

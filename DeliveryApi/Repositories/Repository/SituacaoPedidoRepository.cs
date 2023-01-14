@@ -59,7 +59,7 @@ namespace DeliveryApi.Repositories.Repository
         {
             if (_context != null)
             {
-                var situacaoPedido = _context.situacoes_pedidos.FirstOrDefault(x => x.Id == situacaoPedidoId);
+                var situacaoPedido = _context.situacoes_pedidos.AsNoTracking().FirstOrDefault(x => x.Id == situacaoPedidoId);
                 return situacaoPedido;
             }
 
@@ -70,7 +70,7 @@ namespace DeliveryApi.Repositories.Repository
         {
             if (_context != null)
             {
-                var situacoesPedidos = _context.situacoes_pedidos.ToList();
+                var situacoesPedidos = _context.situacoes_pedidos.AsNoTracking().ToList();
                 return situacoesPedidos;
             }
 

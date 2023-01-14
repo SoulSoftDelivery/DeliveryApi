@@ -11,6 +11,8 @@ namespace DeliveryApi.Controllers
 {
     [Authorize]
     [ApiController]
+    [Produces("application/json")]
+    [ApiConventionType(typeof(DefaultApiConventions))]
     public class PedidoController : Controller
     {
         IPedidoRepository pedidoRepository;

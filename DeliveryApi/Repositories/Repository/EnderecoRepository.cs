@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DeliveryApi.Repositories.Interface;
+using Microsoft.EntityFrameworkCore;
 
 namespace DeliveryApi.Repositories.Repository
 {
@@ -58,7 +59,7 @@ namespace DeliveryApi.Repositories.Repository
         {
             if (_context != null)
             {
-                var endereco = _context.enderecos.FirstOrDefault(x => x.Id == enderecoId);
+                var endereco = _context.enderecos.AsNoTracking().FirstOrDefault(x => x.Id == enderecoId);
                 return endereco;
             }
 
@@ -70,7 +71,7 @@ namespace DeliveryApi.Repositories.Repository
         {
             if (_context != null)
             {
-                var endereco = _context.enderecos.FirstOrDefault(x => x.ClienteId == clienteId);
+                var endereco = _context.enderecos.AsNoTracking().FirstOrDefault(x => x.ClienteId == clienteId);
                 return endereco;
             }
 

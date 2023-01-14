@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DeliveryApi.Repositories.Interface;
+using Microsoft.EntityFrameworkCore;
 
 namespace DeliveryApi.Repositories.Repository
 {
@@ -58,7 +59,7 @@ namespace DeliveryApi.Repositories.Repository
         {
             if (_context != null)
             {
-                var cliente = _context.clientes.FirstOrDefault(x => x.Id == clienteId);
+                var cliente = _context.clientes.AsNoTracking().FirstOrDefault(x => x.Id == clienteId);
                 return cliente;
             }
 
@@ -69,7 +70,7 @@ namespace DeliveryApi.Repositories.Repository
         {
             if (_context != null)
             {
-                var clientes = _context.clientes.Where(x => x.EmpresaId == empresaId).ToList();
+                var clientes = _context.clientes.AsNoTracking().Where(x => x.EmpresaId == empresaId).ToList();
                 return clientes;
             }
 

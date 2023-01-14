@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DeliveryApi.Repositories.Interface;
+using Microsoft.EntityFrameworkCore;
 
 namespace DeliveryApi.Repositories.Repository
 {
@@ -57,7 +58,7 @@ namespace DeliveryApi.Repositories.Repository
         {
             if (_context != null)
             {
-                var categoriaProduto = _context.categorias_produtos.FirstOrDefault(x => x.Id == categoriaProdutoId);
+                var categoriaProduto = _context.categorias_produtos.AsNoTracking().FirstOrDefault(x => x.Id == categoriaProdutoId);
                 return categoriaProduto;
             }
 
@@ -68,7 +69,7 @@ namespace DeliveryApi.Repositories.Repository
         {
             if (_context != null)
             {
-                var categoriasProdutos = _context.categorias_produtos.ToList();
+                var categoriasProdutos = _context.categorias_produtos.AsNoTracking().ToList();
                 return categoriasProdutos;
             }
 

@@ -13,6 +13,8 @@ namespace DeliveryApi.Controllers
 {
     [Authorize]
     [ApiController]
+    [Produces("application/json")]
+    [ApiConventionType(typeof(DefaultApiConventions))]
     public class AutenticadorController : Controller
     {
         IUsuarioRepository usuarioRepository;
@@ -38,6 +40,11 @@ namespace DeliveryApi.Controllers
             _config = Configuration;
         }
 
+        /// <summary>
+        /// Fazer login com Email e Senha
+        /// </summary>
+        /// <param name="login">Modelo Login</param>
+        /// <returns></returns>
         [AllowAnonymous]
         [HttpPost]
         [Route("/api/[controller]/Login")]
@@ -118,6 +125,11 @@ namespace DeliveryApi.Controllers
             }
         }
 
+        /// <summary>
+        /// Fazer login com JWT Token
+        /// </summary>
+        /// <param name="loginWithToken">Modelo LoginWithToken</param>
+        /// <returns></returns>
         [AllowAnonymous]
         [HttpPost]
         [Route("/api/[controller]/LoginWithToken")]
@@ -185,6 +197,11 @@ namespace DeliveryApi.Controllers
             }
         }
 
+        /// <summary>
+        /// Enviar link de redefinição de senha
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns></returns>
         [AllowAnonymous]
         [HttpGet]
         [Route("/api/[controller]/EnviarLinkRedefinicaoSenha/{email}")]
@@ -248,6 +265,11 @@ namespace DeliveryApi.Controllers
             }
         }
 
+        /// <summary>
+        /// Conferir validade do Link de Redefinição de senha
+        /// </summary>
+        /// <param name="redefinirSenha">Modelo RedefinirSenha</param>
+        /// <returns></returns>
         [AllowAnonymous]
         [HttpPost]
         [Route("/api/[controller]/ChecarResetSenha")]
@@ -303,6 +325,11 @@ namespace DeliveryApi.Controllers
             }
         }
 
+        /// <summary>
+        /// Resetar a senha do Usuário
+        /// </summary>
+        /// <param name="redefinirSenha">Modelo RedefinirSenha</param>
+        /// <returns></returns>
         [AllowAnonymous]
         [HttpPost]
         [Route("/api/[controller]/ResetarSenha")]
