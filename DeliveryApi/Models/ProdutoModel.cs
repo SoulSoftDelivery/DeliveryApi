@@ -15,10 +15,16 @@ namespace DeliveryApi.Models
         [StringLength(255)]
         public string Descricao { get; set; }
         [Column("qtd")]
-        public int Qtd { get; set; }
+        public int? Qtd { get; set; }
         [Column("valor")]
         [Required]
         public float Valor { get; set; }
+        [Column("img_capa_nome")]
+        [StringLength(50)]
+        public string ImgCapaNome { get; set; }
+        [Column("img_capa_url")]
+        [StringLength(100)]
+        public string ImgCapaUrl { get; set; }
         [Column("categoria_produto_id")]
         [ForeignKey("CategoriaProduto")]
         [Required]

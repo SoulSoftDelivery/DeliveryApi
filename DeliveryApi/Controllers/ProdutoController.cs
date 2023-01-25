@@ -6,6 +6,11 @@ using System.Net;
 using DeliveryApi.Services;
 using Microsoft.AspNetCore.Authorization;
 using System.Linq;
+using Microsoft.Extensions.Hosting;
+using System.IO;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Hosting.Server;
+using System.Drawing;
 
 namespace DeliveryApi.Controllers
 {
@@ -16,6 +21,7 @@ namespace DeliveryApi.Controllers
     public class ProdutoController : Controller
     {
         IProdutoRepository produtoRepository;
+        public static IWebHostEnvironment _environment;
 
         Response response = new Response
         {
@@ -25,20 +31,32 @@ namespace DeliveryApi.Controllers
 
         const string errmsg = "Não foi possível concluir a solicitação.";
 
-        public ProdutoController(IProdutoRepository ProdutoRepository)
+        public ProdutoController(IProdutoRepository ProdutoRepository, IWebHostEnvironment environment)
         {
             produtoRepository = ProdutoRepository;
+            _environment = environment;
         }
 
         [HttpPost]
-        public ActionResult<Response> Post(ProdutoModel produto)
+        public ActionResult<Response> Post([FromForm] CadastrarProduto produto)
         {
             try
             {
-                produto.DtCadastro = DateTime.Now;
-                produto.DtAtualizacao = DateTime.Now;
+                var newProduto = new ProdutoModel
+                {
+                    Nome = produto.Nome,
+                    Descricao = produto.Descricao,
+                    Qtd = produto.Qtd,
+                    Valor = produto.Valor,
+                    Ativo = produto.Ativo,
+                    CategoriaProdutoId = produto.CategoriaProdutoId,
+                    TipoMedidaId = produto.TipoMedidaId,
+                    EmpresaId = produto.EmpresaId,
+                    DtCadastro = DateTime.Now,
+                    DtAtualizacao = DateTime.Now
+                };
 
-                var id = produtoRepository.Create(produto);
+                var id = produtoRepository.Create(newProduto);
 
                 if (id == 0)
                 {
@@ -49,6 +67,21 @@ namespace DeliveryApi.Controllers
                 }
 
                 response.conteudo.Add(id);
+
+                if (produto.ImgCapa != null && produto.ImgCapa.Length > 0)
+                {
+                    var fileName = produto.EmpresaId + "-" + id + ".jpg";
+                    var filePath = Path.Combine("Uploads/Produtos", fileName);
+                    using Stream fileStream = new FileStream(filePath, FileMode.Create);
+                    produto.ImgCapa.CopyTo(fileStream);
+
+                    string domain = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}";
+
+                    newProduto.ImgCapaNome = fileName;
+                    newProduto.ImgCapaUrl = domain + "/" + filePath;
+
+                    produtoRepository.Update(newProduto);
+                }
 
                 return response;
             }
@@ -79,7 +112,7 @@ namespace DeliveryApi.Controllers
         }
 
         [HttpPatch]
-        public ActionResult<Response> Patch(ProdutoModel produto)
+        public ActionResult<Response> Patch([FromForm] CadastrarProduto produto)
         {
             try
             {
@@ -93,6 +126,22 @@ namespace DeliveryApi.Controllers
                 newProduto.CategoriaProdutoId = produto.CategoriaProdutoId;
                 newProduto.Ativo = produto.Ativo;
                 newProduto.DtAtualizacao = DateTime.Now;
+
+                if (produto.ImgCapa != null && produto.ImgCapa.Length > 0)
+                {
+                    var fileName = produto.EmpresaId + "-" + produto.Id + ".jpg";
+                    var filePath = Path.Combine("Uploads/Produtos", fileName);
+                    using Stream fileStream = new FileStream(filePath, FileMode.Create);
+                    produto.ImgCapa.CopyTo(fileStream);
+
+                    if (String.IsNullOrEmpty(newProduto.ImgCapaUrl) && String.IsNullOrEmpty(newProduto.ImgCapaNome))
+                    {
+                        string domain = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}";
+
+                        newProduto.ImgCapaNome = fileName;
+                        newProduto.ImgCapaUrl = domain + "/" + filePath;
+                    }
+                }
 
                 var result = produtoRepository.Update(newProduto);
 
@@ -147,6 +196,15 @@ namespace DeliveryApi.Controllers
                 }
 
                 var result = produtoRepository.Delete(produto);
+
+                if (!String.IsNullOrEmpty(produto.ImgCapaNome))
+                {
+                    string filePath = Path.Combine("Uploads/Produtos", produto.ImgCapaNome);
+                    if (System.IO.File.Exists(filePath))
+                    {
+                        System.IO.File.Delete(filePath);
+                    }
+                }
 
                 if (!result)
                 {

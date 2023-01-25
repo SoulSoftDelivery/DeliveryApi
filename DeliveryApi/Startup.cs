@@ -17,6 +17,7 @@ using System.Text;
 using System;
 using System.Reflection;
 using System.IO;
+using Microsoft.Extensions.FileProviders;
 
 namespace DeliveryApi
 {
@@ -131,6 +132,13 @@ namespace DeliveryApi
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "DeliveryApi v1"));
             }
+
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(
+                Path.Combine(env.ContentRootPath, "Uploads/Produtos")),
+                RequestPath = "/uploads/produtos"
+            });
 
             app.UseCors(c =>
                 c.AllowAnyMethod()

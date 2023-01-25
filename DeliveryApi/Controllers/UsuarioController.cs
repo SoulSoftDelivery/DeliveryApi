@@ -36,9 +36,9 @@ namespace DeliveryApi.Controllers
         {
             try
             {
-                var existsEmail = usuarioRepository.ConsultaPorEmail(usuario.Email);
+                var exists = usuarioRepository.ConsultaPorEmail(usuario.Email);
 
-                if (existsEmail != null)
+                if (exists != null)
                 {
                     response.ok = false;
                     response.msg = "Email já cadastrado.";
@@ -49,7 +49,7 @@ namespace DeliveryApi.Controllers
                 usuario.DtCadastro = DateTime.Now;
                 usuario.DtAtualizacao = DateTime.Now;
                 usuario.Ativo = true;
-                usuario.Senha = SecurityService.Criptografar(usuario.Senha);
+                usuario.Senha = usuario.Senha.Encrypt();
 
                 var id = usuarioRepository.Create(usuario);
 
@@ -299,7 +299,7 @@ namespace DeliveryApi.Controllers
             {
                 var usuario = usuarioRepository.Get(editPassword.UsuarioId);
 
-                editPassword.SenhaAtual = SecurityService.Criptografar(editPassword.SenhaAtual);
+                editPassword.SenhaAtual = editPassword.SenhaAtual.Encrypt();
 
                 if (usuario.Senha != editPassword.SenhaAtual)
                 {
@@ -309,7 +309,7 @@ namespace DeliveryApi.Controllers
                     return response;
                 }
 
-                usuario.Senha = SecurityService.Criptografar(editPassword.NovaSenha);
+                usuario.Senha = editPassword.NovaSenha.Encrypt();
                 usuario.DtAtualizacao = DateTime.Now;
 
                 var result = usuarioRepository.Update(usuario);
@@ -318,7 +318,6 @@ namespace DeliveryApi.Controllers
                 {
                     response.ok = false;
                     response.msg = errmsg;
-
                 }
 
                 return response;

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Extensions.Configuration;
 using System.Web;
+using System.Threading.Tasks;
 
 namespace DeliveryApi.Controllers
 {
@@ -62,7 +63,7 @@ namespace DeliveryApi.Controllers
                     return response;
                 }
 
-                login.Senha = SecurityService.Criptografar(login.Senha);
+                login.Senha = login.Senha.Encrypt();
 
                 if (login.Senha != usuario.Senha)
                 {
@@ -347,7 +348,7 @@ namespace DeliveryApi.Controllers
                     return response;
                 }
 
-                usuario.Senha = SecurityService.Criptografar(redefinirSenha.NovaSenha);
+                usuario.Senha = redefinirSenha.NovaSenha.Encrypt();
                 usuario.DtAtualizacao = DateTime.Now;
 
                 usuarioRepository.Update(usuario);
@@ -379,6 +380,44 @@ namespace DeliveryApi.Controllers
                 response.msg = errmsg;
                 return response;
             }
+        }
+
+        /// <summary>
+        /// Rota responsável pela Criptografia e Descriptografia de Senhas.
+        /// </summary>
+        /// <param name="cripto">Modelo Criptografia</param>
+        /// <returns></returns>
+        [AllowAnonymous]
+        [HttpPost]
+        [Route("/api/[controller]/Criptografia")]
+        public ActionResult PostCriptografia(Criptografia cripto)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(cripto.senha))
+                {
+                    return Ok();
+                }
+
+                if (cripto.criptografar)
+                {
+                    return Ok(cripto.senha.Encrypt());
+                }
+                else
+                {
+                    return Ok(cripto.senha.DecryptStringAES());
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
+
+        public class Criptografia
+        {
+            public string senha { get; set; }
+            public bool criptografar { get; set; }
         }
     }
 }
