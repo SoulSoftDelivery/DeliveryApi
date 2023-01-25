@@ -4,16 +4,14 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DeliveryApi.Models
 {
-    public class TipoUsuarioModel : BaseEntity
+    public class MesaModel : BaseEntity
     {
-        [Column("nome")]
-        [StringLength(50)]
+        [Column("numero")]
         [Required]
-        public string Nome { get; set; }
-        //[ForeignKey("Empresa")]
-        //[Required]
-        //public int EmpresaId { get; set; }
-        //public virtual EmpresaModel Empresa { get; set; }
-        //public List<UsuarioModel> Usuarios { get; set; }
+        public int Numero { get; set; }
+        [ForeignKey("Empresa")]
+        [Required]
+        public int EmpresaId { get; set; }
+        public virtual EmpresaModel Empresa { get; set; }
     }
 }

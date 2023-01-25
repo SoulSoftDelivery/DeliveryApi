@@ -20,6 +20,7 @@ namespace DeliveryApi.Models
         public DbSet<UsuarioModel> usuarios { get; set; }
         public DbSet<ProdutoModel> produtos { get; set; }
         public DbSet<PedidoModel> pedidos { get; set; }
+        public DbSet<MesaModel> mesas { get; set; }
         public DbSet<PedidoProdutoModel> pedidos_produtos { get; set; }
         public DbSet<ErroModel> erros { get; set; }
 

@@ -72,6 +72,7 @@ namespace DeliveryApi
             services.AddTransient<IUsuarioRepository, UsuarioRepository>();
             services.AddTransient<IProdutoRepository, ProdutoRepository>();
             services.AddTransient<IPedidoRepository, PedidoRepository>();
+            services.AddTransient<IMesaRepository, MesaRepository>();
             services.AddTransient<IEnderecoRepository, EnderecoRepository>();
             services.AddTransient<IClienteRepository, ClienteRepository>();
             services.AddTransient<IErroRepository, ErroRepository>();
