@@ -11,6 +11,7 @@ namespace DeliveryApi.Controllers
 {
     [Authorize]
     [ApiController]
+    [Produces("application/json")]
     [Route("/api/[controller]")]
     [ApiConventionType(typeof(DefaultApiConventions))]
     public class ClienteController : Controller

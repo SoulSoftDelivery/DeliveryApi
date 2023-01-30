@@ -46,7 +46,7 @@ namespace DeliveryApi.Controllers
                     response.ok = false;
                     response.msg = "Email já cadastrado.";
 
-                    return StatusCode(500, response);
+                    return BadRequest(response);
                 }
 
                 var empresa = new EmpresaModel

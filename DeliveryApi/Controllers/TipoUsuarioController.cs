@@ -11,6 +11,7 @@ namespace DeliveryApi.Controllers
     [Authorize]
     [ApiController]
     [Produces("application/json")]
+    [Route("/api/[controller]")]
     [ApiConventionType(typeof(DefaultApiConventions))]
     public class TipoUsuarioController : Controller
     {
@@ -29,9 +30,8 @@ namespace DeliveryApi.Controllers
             tipoUsuarioRepository = TipoUsuarioRepository;
         }
 
-        [Route("/api/[controller]/Create")]
         [HttpPost]
-        public Response Create(TipoUsuarioModel tipoUsuario)
+        public ActionResult<Response> Post(TipoUsuarioModel tipoUsuario)
         {
             try
             {
@@ -51,7 +51,7 @@ namespace DeliveryApi.Controllers
 
                 response.conteudo.Add(id);
 
-                return response;
+                return Ok(response);
             }
             catch (Exception ex)
             {
@@ -61,7 +61,7 @@ namespace DeliveryApi.Controllers
                 {
                     StatusCode = (int)HttpStatusCode.InternalServerError,
                     NomeAplicacao = "DeliveryApi",
-                    NomeFuncao = "Create",
+                    NomeFuncao = "Post",
                     Url = domain + "/api/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName,
                     ParametroEntrada = Newtonsoft.Json.JsonConvert.SerializeObject(tipoUsuario),
                     Descricao = ex.Message,
@@ -75,13 +75,12 @@ namespace DeliveryApi.Controllers
 
                 response.ok = false;
                 response.msg = errmsg;
-                return response;
+                return StatusCode(500, response);
             }
         }
 
-        [Route("/api/[controller]/Update")]
         [HttpPatch]
-        public Response Update(TipoUsuarioModel tipoUsuario)
+        public ActionResult<Response> Patch(TipoUsuarioModel tipoUsuario)
         {
             try
             {
@@ -97,9 +96,11 @@ namespace DeliveryApi.Controllers
                 {
                     response.ok = false;
                     response.msg = errmsg;
+
+                    return StatusCode(500, response);
                 }
 
-                return response;
+                return Ok(response);
             }
             catch (Exception ex)
             {
@@ -109,7 +110,7 @@ namespace DeliveryApi.Controllers
                 {
                     StatusCode = (int)HttpStatusCode.InternalServerError,
                     NomeAplicacao = "DeliveryApi",
-                    NomeFuncao = "Update",
+                    NomeFuncao = "Patch",
                     Url = domain + "/api/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName,
                     ParametroEntrada = Newtonsoft.Json.JsonConvert.SerializeObject(tipoUsuario),
                     Descricao = ex.Message,
@@ -124,26 +125,36 @@ namespace DeliveryApi.Controllers
 
                 response.ok = false;
                 response.msg = errmsg;
-                return response;
+                return StatusCode(500, response);
             }
         }
 
-        [Route("/api/[controller]/Delete/{tipoUsuarioId}")]
-        [HttpDelete]
-        public Response Delete(int tipoUsuarioId)
+        [HttpDelete("{tipoUsuarioId}")]
+        public ActionResult<Response> Delete(int tipoUsuarioId)
         {
             try
             {
                 var tipoUsuario = tipoUsuarioRepository.Get(tipoUsuarioId);
+
+                if (tipoUsuario == null)
+                {
+                    response.ok = false;
+                    response.msg = "Não foi possível encontrar o registro.";
+
+                    return NotFound(response);
+                }
+
                 var result = tipoUsuarioRepository.Delete(tipoUsuario);
 
                 if (!result)
                 {
                     response.ok = false;
                     response.msg = errmsg;
+
+                    return StatusCode(500, response);
                 }
 
-                return response;
+                return Ok(response);
             }
             catch (Exception ex)
             {
@@ -168,13 +179,12 @@ namespace DeliveryApi.Controllers
 
                 response.ok = false;
                 response.msg = errmsg;
-                return response;
+                return StatusCode(500, response);
             }
         }
 
-        [Route("/api/[controller]/Get/{tipoUsuarioId}")]
-        [HttpGet]
-        public Response Get(int tipoUsuarioId)
+        [HttpGet("{tipoUsuarioId}")]
+        public ActionResult<Response> Get(int tipoUsuarioId)
         {
             try
             {
@@ -183,11 +193,13 @@ namespace DeliveryApi.Controllers
                 if (tipoUsuario == null)
                 {
                     response.ok = false;
-                    response.msg = errmsg;
+                    response.msg = "Não foi possível encontrar o registro.";
+
+                    return NotFound(response);
                 }
 
                 response.conteudo.Add(tipoUsuario);
-                return response;
+                return Ok(response);
             }
             catch (Exception ex)
             {
@@ -212,13 +224,12 @@ namespace DeliveryApi.Controllers
 
                 response.ok = false;
                 response.msg = errmsg;
-                return response;
+                return StatusCode(500, response);
             }
         }
 
-        [Route("/api/[controller]/List")]
         [HttpGet]
-        public Response List()
+        public ActionResult<Response> Get()
         {
             try
             {
@@ -227,11 +238,13 @@ namespace DeliveryApi.Controllers
                 if (tiposUsuarios == null)
                 {
                     response.ok = false;
-                    response.msg = errmsg;
+                    response.msg = "Não foi possível encontrar o registro.";
+
+                    return NotFound(response);
                 }
 
                 response.conteudo.Add(tiposUsuarios);
-                return response;
+                return Ok(response);
             }
             catch (Exception ex)
             {
@@ -241,7 +254,7 @@ namespace DeliveryApi.Controllers
                 {
                     StatusCode = (int)HttpStatusCode.InternalServerError,
                     NomeAplicacao = "DeliveryApi",
-                    NomeFuncao = "List",
+                    NomeFuncao = "Get",
                     Url = domain + "/api/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName,
                     Descricao = ex.Message,
                     DescricaoCompleta = ex.ToString(),
@@ -254,7 +267,7 @@ namespace DeliveryApi.Controllers
 
                 response.ok = false;
                 response.msg = errmsg;
-                return response;
+                return StatusCode(500, response);
             }
         }
     }

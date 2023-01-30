@@ -12,6 +12,7 @@ namespace DeliveryApi.Controllers
     [Authorize]
     [ApiController]
     [Produces("application/json")]
+    [Route("/api/[controller]")]
     [ApiConventionType(typeof(DefaultApiConventions))]
     public class UsuarioController : Controller
     {
@@ -30,9 +31,8 @@ namespace DeliveryApi.Controllers
             usuarioRepository = UsuarioRepository;
         }
 
-        [Route("/api/[controller]/Create")]
         [HttpPost]
-        public Response Create(UsuarioModel usuario)
+        public ActionResult<Response> Post(UsuarioModel usuario)
         {
             try
             {
@@ -43,7 +43,7 @@ namespace DeliveryApi.Controllers
                     response.ok = false;
                     response.msg = "Email já cadastrado.";
 
-                    return response;
+                    return BadRequest(response);
                 }
 
                 usuario.DtCadastro = DateTime.Now;
@@ -58,7 +58,7 @@ namespace DeliveryApi.Controllers
                     response.ok = false;
                     response.msg = errmsg;
 
-                    return response;
+                    return Ok(response);
                 }
 
                 response.conteudo.Add(id);
@@ -73,7 +73,7 @@ namespace DeliveryApi.Controllers
                 {
                     StatusCode = (int)HttpStatusCode.InternalServerError,
                     NomeAplicacao = "DeliveryApi",
-                    NomeFuncao = "Create",
+                    NomeFuncao = "Post",
                     Url = domain + "/api/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName,
                     ParametroEntrada = Newtonsoft.Json.JsonConvert.SerializeObject(usuario),
                     Descricao = ex.Message,
@@ -87,21 +87,29 @@ namespace DeliveryApi.Controllers
 
                 response.ok = false;
                 response.msg = errmsg;
-                return response;
+                return StatusCode(500, response);
             }
         }
 
-        [Route("/api/[controller]/Update")]
         [HttpPatch]
-        public Response Update(UsuarioModel usuario)
+        public ActionResult<Response> Patch(UsuarioModel usuario)
         {
             try
             {
                 var newUsuario = usuarioRepository.Get(usuario.Id);
 
+                if (newUsuario == null)
+                {
+                    response.ok = false;
+                    response.msg = "Não foi possível encontrar o registro.";
+
+                    return NotFound(response);
+                }
+
                 newUsuario.Nome = usuario.Nome;
                 newUsuario.Telefone = usuario.Telefone;
                 newUsuario.Email = usuario.Email;
+                newUsuario.Senha = usuario.Senha.Encrypt();
                 newUsuario.Ativo = usuario.Ativo;
                 newUsuario.DtAtualizacao = DateTime.Now;
 
@@ -113,7 +121,7 @@ namespace DeliveryApi.Controllers
                     response.msg = errmsg;
                 }
 
-                return response;
+                return Ok(response);
             }
             catch (Exception ex)
             {
@@ -123,7 +131,7 @@ namespace DeliveryApi.Controllers
                 {
                     StatusCode = (int)HttpStatusCode.InternalServerError,
                     NomeAplicacao = "DeliveryApi",
-                    NomeFuncao = "Update",
+                    NomeFuncao = "Patch",
                     Url = domain + "/api/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName,
                     ParametroEntrada = Newtonsoft.Json.JsonConvert.SerializeObject(usuario),
                     Descricao = ex.Message,
@@ -138,26 +146,36 @@ namespace DeliveryApi.Controllers
 
                 response.ok = false;
                 response.msg = errmsg;
-                return response;
+                return StatusCode(500, response);
             }
         }
 
-        [Route("/api/[controller]/Delete/{usuarioId}")]
-        [HttpDelete]
-        public Response Delete(int usuarioId)
+        [HttpDelete("{usuarioId}")]
+        public ActionResult<Response> Delete(int usuarioId)
         {
             try
             {
                 var usuario = usuarioRepository.Get(usuarioId);
+
+                if (usuario == null)
+                {
+                    response.ok = false;
+                    response.msg = "Não foi possível encontrar o registro.";
+
+                    return NotFound(response);
+                }
+
                 var result = usuarioRepository.Delete(usuario);
 
                 if (!result)
                 {
                     response.ok = false;
                     response.msg = errmsg;
+
+                    return StatusCode(500, response);
                 }
 
-                return response;
+                return Ok(response);
             }
             catch (Exception ex)
             {
@@ -182,13 +200,12 @@ namespace DeliveryApi.Controllers
 
                 response.ok = false;
                 response.msg = errmsg;
-                return response;
+                return StatusCode(500, response);
             }
         }
 
-        [Route("/api/[controller]/Get/{usuarioId}")]
-        [HttpGet]
-        public Response Get(int usuarioId)
+        [HttpGet("{usuarioId}")]
+        public ActionResult<Response> Get(int usuarioId)
         {
             try
             {
@@ -197,11 +214,15 @@ namespace DeliveryApi.Controllers
                 if (usuario == null)
                 {
                     response.ok = false;
-                    response.msg = errmsg;
+                    response.msg = "Não foi possível encontrar o registro.";
+
+                    return NotFound(response);
                 }
 
+                usuario.Senha = usuario.Senha.DecryptStringAES();
+
                 response.conteudo.Add(usuario);
-                return response;
+                return Ok(response);
             }
             catch (Exception ex)
             {
@@ -226,13 +247,12 @@ namespace DeliveryApi.Controllers
 
                 response.ok = false;
                 response.msg = errmsg;
-                return response;
+                return StatusCode(500, response);
             }
         }
 
-        [Route("/api/[controller]/List")]
         [HttpGet]
-        public Response List(int empresaId, int page, int pageSize)
+        public ActionResult<Response> Get([FromQuery] int empresaId, string nome, int situacao, int page, int pageSize)
         {
             try
             {
@@ -243,7 +263,27 @@ namespace DeliveryApi.Controllers
                 if (usuarios == null)
                 {
                     response.ok = false;
-                    response.msg = errmsg;
+                    response.msg = "Não foi possível encontrar o registro.";
+
+                    return NotFound(response);
+                }
+
+                //Filtro da pesquisa
+                if (!string.IsNullOrEmpty(nome))
+                {
+                    usuarios = usuarios.Where(x => x.Nome.Contains(nome)).ToList();
+                }
+
+                if (situacao >= 1)
+                {
+                    if (situacao == 1)
+                    {
+                        usuarios = usuarios.Where(x => x.Ativo == true).ToList();
+                    }
+                    else
+                    {
+                        usuarios = usuarios.Where(x => x.Ativo == false).ToList();
+                    }
                 }
 
                 PaginationResponse paginationResponse = new PaginationResponse();
@@ -263,7 +303,7 @@ namespace DeliveryApi.Controllers
                 paginationResponse.Results.Add(usuarios.Skip((page - 1) * pageSize).Take(pageSize).ToList());
 
                 response.conteudo.Add(paginationResponse);
-                return response;
+                return Ok(response);
             }
             catch (Exception ex)
             {
@@ -287,13 +327,12 @@ namespace DeliveryApi.Controllers
 
                 response.ok = false;
                 response.msg = errmsg;
-                return response;
+                return StatusCode(500, response);
             }
         }
 
-        [Route("/api/[controller]/EditPassword")]
-        [HttpPost]
-        public Response EditPassword(EditPassword editPassword)
+        [HttpPost("EditPassword")]
+        public ActionResult<Response> EditPassword(EditPassword editPassword)
         {
             try
             {
@@ -318,9 +357,11 @@ namespace DeliveryApi.Controllers
                 {
                     response.ok = false;
                     response.msg = errmsg;
+
+                    return StatusCode(500, response);
                 }
 
-                return response;
+                return Ok(response);
             }
             catch (Exception ex)
             {
@@ -345,7 +386,7 @@ namespace DeliveryApi.Controllers
 
                 response.ok = false;
                 response.msg = errmsg;
-                return response;
+                return StatusCode(500, response);
             }
         }
     }

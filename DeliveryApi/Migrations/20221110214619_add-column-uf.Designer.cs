@@ -4,14 +4,16 @@ using DeliveryApi.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DeliveryApi.Migrations
 {
     [DbContext(typeof(WebAppDbContext))]
-    partial class WebAppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221110214619_add-column-uf")]
+    partial class addcolumnuf
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -120,31 +122,11 @@ namespace DeliveryApi.Migrations
                         .HasColumnType("bit")
                         .HasColumnName("ativo");
 
-                    b.Property<string>("Bairro")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)")
-                        .HasColumnName("bairro");
-
-                    b.Property<string>("Cep")
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)")
-                        .HasColumnName("cep");
-
-                    b.Property<string>("Cidade")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)")
-                        .HasColumnName("cidade");
-
                     b.Property<string>("Cnpj")
+                        .IsRequired()
                         .HasMaxLength(18)
                         .HasColumnType("nvarchar(18)")
                         .HasColumnName("cnpj");
-
-                    b.Property<string>("Complemento")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)")
-                        .HasColumnName("complemento");
 
                     b.Property<DateTime>("DtAtualizacao")
                         .HasColumnType("datetime2")
@@ -155,14 +137,14 @@ namespace DeliveryApi.Migrations
                         .HasColumnName("dt_cadastro");
 
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)")
                         .HasColumnName("email");
 
-                    b.Property<string>("Lote")
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)")
-                        .HasColumnName("lote");
+                    b.Property<int>("EnderecoId")
+                        .HasColumnType("int")
+                        .HasColumnName("endereco_id");
 
                     b.Property<string>("Nome")
                         .IsRequired()
@@ -170,39 +152,14 @@ namespace DeliveryApi.Migrations
                         .HasColumnType("nvarchar(100)")
                         .HasColumnName("nome");
 
-                    b.Property<string>("Numero")
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)")
-                        .HasColumnName("numero");
-
-                    b.Property<string>("Quadra")
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)")
-                        .HasColumnName("quadra");
-
-                    b.Property<string>("Rua")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)")
-                        .HasColumnName("rua");
-
-                    b.Property<string>("Telefone1")
-                        .IsRequired()
+                    b.Property<string>("Telefone")
                         .HasMaxLength(16)
                         .HasColumnType("nvarchar(16)")
-                        .HasColumnName("telefone1");
-
-                    b.Property<string>("Telefone2")
-                        .HasMaxLength(16)
-                        .HasColumnType("nvarchar(16)")
-                        .HasColumnName("telefone2");
-
-                    b.Property<string>("Uf")
-                        .IsRequired()
-                        .HasMaxLength(2)
-                        .HasColumnType("nvarchar(2)")
-                        .HasColumnName("uf");
+                        .HasColumnName("telefone");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("EnderecoId");
 
                     b.ToTable("empresas");
                 });
@@ -349,40 +306,6 @@ namespace DeliveryApi.Migrations
                     b.ToTable("erros");
                 });
 
-            modelBuilder.Entity("DeliveryApi.Models.MesaModel", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("id")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<bool>("Ativo")
-                        .HasColumnType("bit")
-                        .HasColumnName("ativo");
-
-                    b.Property<DateTime>("DtAtualizacao")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("dt_atualizacao");
-
-                    b.Property<DateTime>("DtCadastro")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("dt_cadastro");
-
-                    b.Property<int>("EmpresaId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Numero")
-                        .HasColumnType("int")
-                        .HasColumnName("numero");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EmpresaId");
-
-                    b.ToTable("mesas");
-                });
-
             modelBuilder.Entity("DeliveryApi.Models.PedidoModel", b =>
                 {
                     b.Property<int>("Id")
@@ -509,23 +432,13 @@ namespace DeliveryApi.Migrations
                         .HasColumnType("int")
                         .HasColumnName("empresa_id");
 
-                    b.Property<string>("ImgCapaNome")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
-                        .HasColumnName("img_capa_nome");
-
-                    b.Property<string>("ImgCapaUrl")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)")
-                        .HasColumnName("img_capa_url");
-
                     b.Property<string>("Nome")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)")
                         .HasColumnName("nome");
 
-                    b.Property<int?>("Qtd")
+                    b.Property<int>("Qtd")
                         .HasColumnType("int")
                         .HasColumnName("qtd");
 
@@ -533,8 +446,8 @@ namespace DeliveryApi.Migrations
                         .HasColumnType("int")
                         .HasColumnName("tipo_medida_id");
 
-                    b.Property<float>("Valor")
-                        .HasColumnType("real")
+                    b.Property<double>("Valor")
+                        .HasColumnType("float")
                         .HasColumnName("valor");
 
                     b.HasKey("Id");
@@ -776,6 +689,17 @@ namespace DeliveryApi.Migrations
                     b.Navigation("Empresa");
                 });
 
+            modelBuilder.Entity("DeliveryApi.Models.EmpresaModel", b =>
+                {
+                    b.HasOne("DeliveryApi.Models.EnderecoModel", "Endereco")
+                        .WithMany()
+                        .HasForeignKey("EnderecoId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Endereco");
+                });
+
             modelBuilder.Entity("DeliveryApi.Models.EnderecoModel", b =>
                 {
                     b.HasOne("DeliveryApi.Models.TipoEnderecoModel", "TipoEndereco")
@@ -785,17 +709,6 @@ namespace DeliveryApi.Migrations
                         .IsRequired();
 
                     b.Navigation("TipoEndereco");
-                });
-
-            modelBuilder.Entity("DeliveryApi.Models.MesaModel", b =>
-                {
-                    b.HasOne("DeliveryApi.Models.EmpresaModel", "Empresa")
-                        .WithMany()
-                        .HasForeignKey("EmpresaId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Empresa");
                 });
 
             modelBuilder.Entity("DeliveryApi.Models.PedidoModel", b =>

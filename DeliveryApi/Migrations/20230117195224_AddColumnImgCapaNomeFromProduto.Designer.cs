@@ -4,14 +4,16 @@ using DeliveryApi.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DeliveryApi.Migrations
 {
     [DbContext(typeof(WebAppDbContext))]
-    partial class WebAppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230117195224_AddColumnImgCapaNomeFromProduto")]
+    partial class AddColumnImgCapaNomeFromProduto
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -349,40 +351,6 @@ namespace DeliveryApi.Migrations
                     b.ToTable("erros");
                 });
 
-            modelBuilder.Entity("DeliveryApi.Models.MesaModel", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("id")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<bool>("Ativo")
-                        .HasColumnType("bit")
-                        .HasColumnName("ativo");
-
-                    b.Property<DateTime>("DtAtualizacao")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("dt_atualizacao");
-
-                    b.Property<DateTime>("DtCadastro")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("dt_cadastro");
-
-                    b.Property<int>("EmpresaId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Numero")
-                        .HasColumnType("int")
-                        .HasColumnName("numero");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EmpresaId");
-
-                    b.ToTable("mesas");
-                });
-
             modelBuilder.Entity("DeliveryApi.Models.PedidoModel", b =>
                 {
                     b.Property<int>("Id")
@@ -525,7 +493,7 @@ namespace DeliveryApi.Migrations
                         .HasColumnType("nvarchar(100)")
                         .HasColumnName("nome");
 
-                    b.Property<int?>("Qtd")
+                    b.Property<int>("Qtd")
                         .HasColumnType("int")
                         .HasColumnName("qtd");
 
@@ -785,17 +753,6 @@ namespace DeliveryApi.Migrations
                         .IsRequired();
 
                     b.Navigation("TipoEndereco");
-                });
-
-            modelBuilder.Entity("DeliveryApi.Models.MesaModel", b =>
-                {
-                    b.HasOne("DeliveryApi.Models.EmpresaModel", "Empresa")
-                        .WithMany()
-                        .HasForeignKey("EmpresaId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Empresa");
                 });
 
             modelBuilder.Entity("DeliveryApi.Models.PedidoModel", b =>
